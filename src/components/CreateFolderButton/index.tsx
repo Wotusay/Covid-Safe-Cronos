@@ -1,17 +1,24 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import { useStores } from '../../contexts/index';
 
 const CreateFolderButton = (session: any): FC => {
   const { solidStore } = useStores();
+  const [status, setStatus] = useState('');
 
-  const handleCreateFolder = () => {
+  const handleCreateFolder = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-    solidStore.createCronosFolders(session.session);
+    const createFolder = await solidStore.createCronosFolders(session.session);
+    setStatus(createFolder);
   };
 
-  return <button onClick={() => handleCreateFolder()}> Create Folders </button>;
+  return (
+    <>
+      <p>{status} </p>
+      <button onClick={() => handleCreateFolder()}> Create Folders </button>
+    </>
+  );
 };
 
 export default CreateFolderButton;
