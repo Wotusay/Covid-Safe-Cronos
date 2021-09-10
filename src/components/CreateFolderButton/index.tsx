@@ -9,14 +9,21 @@ const CreateFolderButton = (session: any): FC => {
   const handleCreateFolder = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-    const createFolder = await solidStore.createCronosFolders(session.session);
-    setStatus(createFolder);
+    await solidStore.createCronosFolders(session.session);
+    setStatus(solidStore.status);
   };
 
   return (
     <>
-      <p>{status} </p>
-      <button onClick={() => handleCreateFolder()}> Create Folders </button>
+      <div className="flex content-center justify-center">
+        <button
+          className="font-semibold text-white bg-indigo-700 w-44 rounded-sm p-5"
+          onClick={() => handleCreateFolder()}
+        >
+          Create Folders
+        </button>
+      </div>
+      <p className="flex content-center justify-center mt-5 "> {status} </p>
     </>
   );
 };

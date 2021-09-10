@@ -15,7 +15,11 @@ const LoginForm = (): FC => {
       oidcIssuer={idp}
       redirectUrl={currentUrl}
       onError={console.error}
-    />
+    >
+      <p className="font-semibold float-right p-5 text-white bg-green-700 rounded-sm">
+        Login
+      </p>
+    </LoginButton>
   );
 };
 

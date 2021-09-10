@@ -11,8 +11,12 @@ const Profile = () => {
   const { webId } = session.info;
   return (
     <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
-      <Text property={FOAF.name.iri.value} />
-      <CreateFolderButton session={session} />
+      <div className="flex flex-col content-center justify-center">
+        <div className="font-medium text-2xl mb-8 mt-10 flex  content-center justify-center">
+          Username: <Text property={FOAF.name.iri.value} />
+        </div>
+        <CreateFolderButton session={session} />
+      </div>
     </CombinedDataProvider>
   );
 };

@@ -7,12 +7,14 @@ class SolidStore {
   rootStore: any;
   solidService: any;
   session: any;
+  status: string;
 
   constructor(rootStore: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.session;
     this.rootStore = rootStore;
     this.solidService = new SolidService();
+    this.status = '';
   }
 
   createCronosFolders = async (data: any) => {
@@ -22,7 +24,8 @@ class SolidStore {
     const { webId } = this.session.info;
     const spiltLink = webId.split('/');
     const cronosURL = `https://${spiltLink[2]}/cronos/covid/`;
-    return await this.solidService.createFolder(cronosURL, data);
+    await this.solidService.createFolder(cronosURL, data);
+    return (this.status = this.solidService.status);
   };
 }
 
