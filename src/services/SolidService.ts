@@ -15,16 +15,16 @@ import { SCHEMA_INRUPT, RDF, AS } from '@inrupt/vocab-common-rdf';
 
 class SolidService {
   status: string;
-  canCreateTTL: boolean;
+  doneCreatingFiles: boolean;
 
   constructor() {
     this.status = '';
-    this.canCreateTTL = false;
+    this.doneCreatingFiles = false;
   }
 
   setStatuses = () => {
-    this.status = 'Folder already exist or nothing changed';
-    this.canCreateTTL = true;
+    this.status = 'Files succesfull created';
+    this.doneCreatingFiles = true;
   };
 
   createTTLFile = async (
@@ -83,6 +83,7 @@ class SolidService {
       }
       // eslint-disable-next-line no-console
       console.log(listContent);
+      return this.setStatuses();
     } catch (error) {
       console.error(error);
     }

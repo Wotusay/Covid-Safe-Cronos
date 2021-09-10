@@ -20,7 +20,7 @@ class SolidStore {
   }
 
   createCovidFile = async (date: string, certificaat: string, session: any) => {
-    const { webId } = this.session.info;
+    const { webId } = session.info;
     const spiltLink = webId.split('/');
     const cronosURL = `https://${spiltLink[2]}/cronos/covid/covid__info`;
     await this.solidService.createTTLFile(
@@ -29,6 +29,8 @@ class SolidStore {
       date,
       certificaat,
     );
+    this.status = this.solidService.status;
+    console.info(this.status);
   };
 }
 
