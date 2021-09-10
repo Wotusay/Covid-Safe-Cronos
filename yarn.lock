@@ -1399,6 +1399,11 @@
     stream "0.0.2"
     swr "^0.5.6"
 
+"@inrupt/vocab-common-rdf@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@inrupt/vocab-common-rdf/-/vocab-common-rdf-1.0.1.tgz#053e767646d525a9fb2cd8b6f2051e6036285c9b"
+  integrity sha512-fhaU6j3/SQTEr1ZxsGf93LFL57DCl4l2ny1sphDGNaFPoILA2pJBconoaq7kjJxezBZweekAU42VDAPJTc5NLw==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"

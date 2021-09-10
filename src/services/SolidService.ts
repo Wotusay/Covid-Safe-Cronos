@@ -1,52 +1,89 @@
 import {
   createSolidDataset,
-  getSolidDataset,
+  createThing,
+  setThing,
+  addUrl,
+  addStringNoLocale,
   saveSolidDatasetAt,
+  getSolidDataset,
+  getThingAll,
+  getStringNoLocale,
+  removeThing,
 } from '@inrupt/solid-client';
+
+import { SCHEMA_INRUPT, RDF, AS } from '@inrupt/vocab-common-rdf';
 
 class SolidService {
   status: string;
+  canCreateTTL: boolean;
+
   constructor() {
     this.status = '';
+    this.canCreateTTL = false;
   }
-  createFolder = async (url: string, session: any) => {
-    let cronosFolder;
+
+  setStatuses = () => {
+    this.status = 'Folder already exist or nothing changed';
+    this.canCreateTTL = true;
+  };
+
+  createTTLFile = async (
+    cronosURL: string,
+    session: any,
+    date: string,
+    certificaat: string,
+  ) => {
+    // eslint-disable-next-line no-console
+    console.log(cronosURL, session, date, certificaat);
+
     const fetchSessionData = session.fetch;
-    let savedCronosFolder;
+    let myCovidFile: any;
+    const info = [date, certificaat];
 
     try {
-      cronosFolder = await getSolidDataset(url, {
+      myCovidFile = await getSolidDataset(cronosURL, {
         fetch: fetchSessionData,
       });
-      return (this.status = 'Folder already exist or nothing changed');
+      const covidInfo = getThingAll(myCovidFile);
+
+      covidInfo.forEach(info => (myCovidFile = removeThing(myCovidFile, info)));
     } catch (error: any) {
       if (typeof error.statusCode === 'number' && error.statusCode === 404) {
-        cronosFolder = createSolidDataset();
-        // eslint-disable-next-line no-console
-        console.log(cronosFolder);
-        // eslint-disable-next-line no-console
-        console.log('Added files');
+        // if not found, create a new SolidDataset (i.e., the reading list)
+        myCovidFile = createSolidDataset();
       } else {
-        this.status = 'Folder already exist or nothing changed';
         console.error(error.message);
       }
     }
 
+    for (let i = 0; i < info.length; i++) {
+      let title = createThing({ name: `title${i}` });
+      title = addUrl(title, RDF.type, AS.Article);
+      title = addStringNoLocale(title, SCHEMA_INRUPT.name, info[i]);
+      myCovidFile = setThing(myCovidFile, title);
+    }
+
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      savedCronosFolder = await saveSolidDatasetAt(url, cronosFolder, {
+      let savedCovidInfo = await saveSolidDatasetAt(cronosURL, myCovidFile, {
         fetch: fetchSessionData,
       });
-      // eslint-disable-next-line no-console
-      console.log(`Saving Dataset -------- ${savedCronosFolder}`);
-      this.status = 'Folders are created';
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      /*
-      savedCronosFolder = await getSolidDataset(url, {
+
+      savedCovidInfo = await getSolidDataset(cronosURL, {
         fetch: fetchSessionData,
-      });*/
+      });
+
+      const items = getThingAll(savedCovidInfo);
+      let listContent = '';
+
+      for (let i = 0; i < items.length; i++) {
+        const item = getStringNoLocale(items[i], SCHEMA_INRUPT.name);
+        if (item !== null) {
+          listContent += `${item}\n`;
+        }
+      }
+      // eslint-disable-next-line no-console
+      console.log(listContent);
     } catch (error) {
-      this.status = 'Folder already exist or nothing changed';
       console.error(error);
     }
   };
