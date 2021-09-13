@@ -32,13 +32,11 @@ class SolidService {
     session: any,
     date: string,
     certificaat: string,
+    validationDate: string,
   ) => {
-    // eslint-disable-next-line no-console
-    console.log(cronosURL, session, date, certificaat);
-
     const fetchSessionData = session.fetch;
     let myCovidFile: any;
-    const info = [date, certificaat];
+    const info = [date, certificaat, validationDate];
 
     try {
       myCovidFile = await getSolidDataset(cronosURL, {

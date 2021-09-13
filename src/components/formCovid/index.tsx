@@ -34,7 +34,7 @@ const FormCovid = ({ solidStore, session }): FC => {
             Vaccinatiecertificaat
           </option>
           <option value="testcertificaat"> Testcertificaat </option>
-          <option value="herstelcertificaats">Herstelcertificaat </option>
+          <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
 
         <input
