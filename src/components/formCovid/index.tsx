@@ -6,10 +6,12 @@ const FormCovid = ({ solidStore, session }): FC => {
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [date, setDate] = useState();
   const [state, setState] = useState();
+  const [user, setUser] = useState();
 
   const handleSubmit = async (e): Promise<any> => {
     e.preventDefault();
-    await solidStore.createCovidFile(date, certificaat, session);
+    await solidStore.createCovidFile(date, certificaat, session).then();
+    await solidStore.grantAccesToCovidFile(session, user);
     setState(solidStore.status);
   };
   return (
@@ -43,6 +45,14 @@ const FormCovid = ({ solidStore, session }): FC => {
           required
           type="date"
           id="geldigheidsperiode"
+        />
+
+        <input
+          className="border-b-2 border-gray-900"
+          onChange={e => setUser(e.target.value)}
+          required
+          type="text"
+          id="user-access"
         />
 
         <input

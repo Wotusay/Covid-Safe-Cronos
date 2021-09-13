@@ -20,12 +20,21 @@ class SolidStore {
     this.ttlStatus = false;
   }
 
+  grantAccesToCovidFile = async (session: any, user: string) => {
+    const { webId } = session.info;
+    console.info(webId);
+    const spiltLink = webId.split('/');
+    const fileLink = `https://${spiltLink[2]}/cronos/covid/covid__info`;
+    const agentLink = `https://${user}.solidcommunity.net/profile/card#me`;
+    console.info(user);
+    await this.solidService.allowAccesToUsers(fileLink, agentLink, session);
+  };
+
   createCovidFile = async (date: string, certificaat: string, session: any) => {
     const { webId } = session.info;
     const spiltLink = webId.split('/');
     const cronosURL = `https://${spiltLink[2]}/cronos/covid/covid__info`;
     const validationDate = this.validationCalculator(date, certificaat);
-    console.info(validationDate);
     await this.solidService.createTTLFile(
       cronosURL,
       session,
@@ -59,6 +68,7 @@ class SolidStore {
 decorate(SolidStore, {
   ttlStatus: observable,
   createCovidFile: action,
+  grantAccesToCovidFile: action,
 });
 
 export default SolidStore;
