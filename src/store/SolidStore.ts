@@ -20,6 +20,11 @@ class SolidStore {
     this.ttlStatus = false;
   }
 
+  readCovidData = async (session: any, fileLink: string) => {
+    const listItems = await this.solidService.getSolidData(fileLink, session);
+    return listItems;
+  };
+
   grantAccesToCovidFile = async (session: any, user: string) => {
     const { webId } = session.info;
     console.info(webId);
@@ -69,6 +74,7 @@ decorate(SolidStore, {
   ttlStatus: observable,
   createCovidFile: action,
   grantAccesToCovidFile: action,
+  readCovidData: action,
 });
 
 export default SolidStore;

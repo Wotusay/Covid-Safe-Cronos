@@ -24,11 +24,37 @@ import { SCHEMA_INRUPT, RDF, AS } from '@inrupt/vocab-common-rdf';
 class SolidService {
   status: string;
   doneCreatingFiles: boolean;
+  listItems: any;
 
   constructor() {
     this.status = '';
     this.doneCreatingFiles = false;
+    this.listItems = [];
   }
+
+  getSolidData = async (fileLink: string, session: any) => {
+    const fetchSessionData = session.fetch;
+    const savedCovidItems = await getSolidDataset(fileLink, {
+      fetch: fetchSessionData,
+    });
+
+    const items = getThingAll(savedCovidItems);
+    let listedSolidStrings;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = getStringNoLocale(items[i], SCHEMA_INRUPT.name);
+      if (item !== null && this.listItems.length != 3) {
+        this.listItems.push(item);
+      }
+    }
+
+    if (this.listItems.length === 3 && this.listItems != undefined) {
+      listedSolidStrings = this.listItems;
+      this.listItems = [];
+    }
+
+    return listedSolidStrings;
+  };
 
   allowAccesToUsers = async (
     fileLink: string,

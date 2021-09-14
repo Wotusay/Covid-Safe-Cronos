@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useSession, CombinedDataProvider } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
 
