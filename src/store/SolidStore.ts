@@ -20,22 +20,19 @@ class SolidStore {
     this.ttlStatus = false;
   }
 
-  readCovidData = async (session: any, fileLink: string) => {
-    const listItems = await this.solidService.getSolidData(fileLink, session);
-    return listItems;
-  };
-
-  grantAccesToCovidFile = async (session: any, user: string) => {
+  grantAccesToCovidFile = async (session: any, user: string): Promise<any> => {
     const { webId } = session.info;
-    console.info(webId);
     const spiltLink = webId.split('/');
     const fileLink = `https://${spiltLink[2]}/cronos/covid/covid__info`;
     const agentLink = `https://${user}.solidcommunity.net/profile/card#me`;
-    console.info(user);
     await this.solidService.allowAccesToUsers(fileLink, agentLink, session);
   };
 
-  createCovidFile = async (date: string, certificaat: string, session: any) => {
+  createCovidFile = async (
+    date: string,
+    certificaat: string,
+    session: any,
+  ): Promise<any> => {
     const { webId } = session.info;
     const spiltLink = webId.split('/');
     const cronosURL = `https://${spiltLink[2]}/cronos/covid/covid__info`;
@@ -48,20 +45,22 @@ class SolidStore {
       validationDate,
     );
     this.status = this.solidService.status;
-    console.info(this.status);
   };
 
-  validationCalculator = (date: string, certificaat: string) => {
+  validationCalculator = (
+    date: string,
+    certificaat: string,
+  ): Promise<string> => {
     const startDay = moment(date);
     let validationDay;
     switch (certificaat) {
       case 'vaccinatiecertificaat':
         validationDay = startDay.clone().add(1, 'year');
         break;
-      case 'testcertificaat':
+      case 'herstelcertificaat':
         validationDay = startDay.clone().add(180, 'days');
         break;
-      case 'herstelcertificaat':
+      case 'testcertificaat':
         validationDay = startDay.clone().add(72, 'hours');
         break;
     }
@@ -74,7 +73,6 @@ decorate(SolidStore, {
   ttlStatus: observable,
   createCovidFile: action,
   grantAccesToCovidFile: action,
-  readCovidData: action,
 });
 
 export default SolidStore;

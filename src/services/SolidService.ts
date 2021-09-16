@@ -24,43 +24,17 @@ import { SCHEMA_INRUPT, RDF, AS } from '@inrupt/vocab-common-rdf';
 class SolidService {
   status: string;
   doneCreatingFiles: boolean;
-  listItems: any;
 
   constructor() {
     this.status = '';
     this.doneCreatingFiles = false;
-    this.listItems = [];
   }
-
-  getSolidData = async (fileLink: string, session: any) => {
-    const fetchSessionData = session.fetch;
-    const savedCovidItems = await getSolidDataset(fileLink, {
-      fetch: fetchSessionData,
-    });
-
-    const items = getThingAll(savedCovidItems);
-    let listedSolidStrings;
-
-    for (let i = 0; i < items.length; i++) {
-      const item = getStringNoLocale(items[i], SCHEMA_INRUPT.name);
-      if (item !== null && this.listItems.length != 3) {
-        this.listItems.push(item);
-      }
-    }
-
-    if (this.listItems.length === 3 && this.listItems != undefined) {
-      listedSolidStrings = this.listItems;
-      this.listItems = [];
-    }
-
-    return listedSolidStrings;
-  };
 
   allowAccesToUsers = async (
     fileLink: string,
     agentLink: string,
     session: any,
-  ) => {
+  ): Promise<any> => {
     const fetchSessionData = session.fetch;
     const myDataSetWithAcl = await getSolidDatasetWithAcl(fileLink, {
       fetch: fetchSessionData,
@@ -93,7 +67,7 @@ class SolidService {
     await saveAclFor(myDataSetWithAcl, updatedAcl, { fetch: fetchSessionData });
   };
 
-  setStatuses = () => {
+  setStatuses = (): any => {
     this.status = 'Files succesfull created';
     this.doneCreatingFiles = true;
   };
@@ -104,7 +78,7 @@ class SolidService {
     date: string,
     certificaat: string,
     validationDate: string,
-  ) => {
+  ): Promise<any> => {
     const fetchSessionData = session.fetch;
     let myCovidFile: any;
     const info = [date, certificaat, validationDate];
@@ -147,11 +121,10 @@ class SolidService {
       for (let i = 0; i < items.length; i++) {
         const item = getStringNoLocale(items[i], SCHEMA_INRUPT.name);
         if (item !== null) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           listContent += `${item}\n`;
         }
       }
-      // eslint-disable-next-line no-console
-      console.log(listContent);
       return this.setStatuses();
     } catch (error) {
       console.error(error);

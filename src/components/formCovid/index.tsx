@@ -2,11 +2,14 @@ import { FOAF } from '@inrupt/lit-generated-vocab-common';
 import { Text } from '@inrupt/solid-ui-react';
 import React, { FC, useState } from 'react';
 
-const FormCovid = ({ solidStore, session }): FC => {
+import { useStores } from '../../contexts/index';
+
+const FormCovid = (session: any): FC => {
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [date, setDate] = useState();
   const [state, setState] = useState();
   const [user, setUser] = useState();
+  const { solidStore } = useStores();
 
   const handleSubmit = async (e): Promise<any> => {
     e.preventDefault();
@@ -16,15 +19,15 @@ const FormCovid = ({ solidStore, session }): FC => {
   };
   return (
     <>
-      <p className="font-bold text-2xl mt-10 flex gap-1 mb-7 content-center justify-center">
+      <p className="flex content-center justify-center gap-1 mt-10 text-2xl font-bold mb-7">
         Covid gegevens van {<Text property={FOAF.name.iri.value} />}
       </p>
-      <p className="flex font-medium gap-1 mb-7 content-center justify-center text-green-700">
+      <p className="flex content-center justify-center gap-1 font-medium text-green-700 mb-7">
         {state}
       </p>
       <form
-        onSubmit={e => handleSubmit(e)}
-        className="grid gap-7 mb-7 content-center justify-center "
+        onSubmit={handleSubmit}
+        className="grid content-center justify-center gap-7 mb-7 "
       >
         <select
           onChange={e => setCertificaat(e.target.value)}
@@ -48,6 +51,7 @@ const FormCovid = ({ solidStore, session }): FC => {
         />
 
         <input
+          placeholder="Username to access"
           className="border-b-2 border-gray-900"
           onChange={e => setUser(e.target.value)}
           required
@@ -57,7 +61,7 @@ const FormCovid = ({ solidStore, session }): FC => {
 
         <input
           type="submit"
-          className="font-semibold text-white bg-indigo-700 w-44 rounded-sm p-5"
+          className="p-5 font-semibold text-white bg-indigo-700 rounded-sm w-44"
           value="Save information"
         />
       </form>
