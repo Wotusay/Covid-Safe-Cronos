@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
+import dayjs from 'dayjs';
 import { action, decorate, observable } from 'mobx';
-import moment from 'moment';
 
 import SolidService from '../services/SolidService';
 
@@ -51,7 +51,7 @@ class SolidStore {
     date: string,
     certificaat: string,
   ): Promise<string> => {
-    const startDay = moment(date);
+    const startDay = dayjs(date);
     let validationDay;
     switch (certificaat) {
       case 'vaccinatiecertificaat':
