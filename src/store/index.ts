@@ -11,13 +11,14 @@ class RootStore {
       apiKey: process.env.REACT_APP_apiKey,
       authDomain: process.env.REACT_APP_authDomain,
       projectId: process.env.REACT_APP_projectId,
+      databaseURL: process.env.REACT_APP_databaseURL,
       storageBucket: process.env.REACT_APP_storageBucket,
       messagingSenderId: process.env.REACT_APP_messagingSenderId,
       appId: process.env.REACT_APP_appId,
     };
+    this.firebase = firebase.initializeApp(firebaseConfig);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.solidStore = new SolidStore(this);
-    this.firebase = firebase.initializeApp(firebaseConfig);
   }
 }
 

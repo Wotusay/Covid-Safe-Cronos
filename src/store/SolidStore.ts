@@ -2,20 +2,21 @@
 import dayjs from 'dayjs';
 import { action, decorate, observable } from 'mobx';
 
+import FirebaseService from '../services/FirebaseService';
 import SolidService from '../services/SolidService';
 
 class SolidStore {
   rootStore: any;
   solidService: any;
-  session: any;
   status: string;
   ttlStatus: boolean;
+  firebaseService: any;
 
   constructor(rootStore: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    this.session;
     this.rootStore = rootStore;
     this.solidService = new SolidService();
+    this.firebaseService = new FirebaseService(this.rootStore.firebase);
     this.status = '';
     this.ttlStatus = false;
   }
@@ -33,8 +34,11 @@ class SolidStore {
     certificaat: string,
     session: any,
   ): Promise<any> => {
+    console.log(session.info);
     const { webId } = session.info;
     const spiltLink = webId.split('/');
+    const spiltDot = spiltLink[2].split('.');
+    const username = spiltDot[0];
     const cronosURL = `https://${spiltLink[2]}/cronos/covid/covid__info`;
     const validationDate = this.validationCalculator(date, certificaat);
     await this.solidService.createTTLFile(
@@ -44,6 +48,7 @@ class SolidStore {
       certificaat,
       validationDate,
     );
+    await this.firebaseService.writeUserData(username, date, validationDate);
     this.status = this.solidService.status;
   };
 
