@@ -1,10 +1,11 @@
 import { FOAF } from '@inrupt/lit-generated-vocab-common';
-import { Text } from '@inrupt/solid-ui-react';
+import { Text, useSession } from '@inrupt/solid-ui-react';
 import React, { FC, useState } from 'react';
 
 import { useStores } from '../../contexts/index';
 
-const FormCovid = (session: any): FC => {
+const FormCovid = (): FC => {
+  const { session } = useSession();
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [date, setDate] = useState();
   const [state, setState] = useState();
@@ -13,7 +14,7 @@ const FormCovid = (session: any): FC => {
 
   const handleSubmit = async (e): Promise<any> => {
     e.preventDefault();
-    await solidStore.createCovidFile(date, certificaat, session).then();
+    await solidStore.createCovidFile(date, certificaat, session);
     await solidStore.grantAccesToCovidFile(session, user);
     setState(solidStore.status);
   };

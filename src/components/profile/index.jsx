@@ -11,7 +11,7 @@ const Profile = () => {
   return useObserver(() => (
     <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
       <div className="flex flex-col content-center justify-center">
-        <FormCovid session={session} />
+        <FormCovid />
       </div>
     </CombinedDataProvider>
   ));
