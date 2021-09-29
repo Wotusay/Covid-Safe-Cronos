@@ -3,7 +3,6 @@ import {
   createThing,
   setThing,
   addUrl,
-  addStringNoLocale,
   saveSolidDatasetAt,
   getSolidDataset,
   getThingAll,
@@ -17,9 +16,10 @@ import {
   getResourceAcl,
   setAgentResourceAccess,
   saveAclFor,
+  addDate,
 } from '@inrupt/solid-client';
 
-import { SCHEMA_INRUPT, RDF, AS } from '@inrupt/vocab-common-rdf';
+import { SCHEMA_INRUPT, RDF } from '@inrupt/vocab-common-rdf';
 
 class SolidService {
   status: string;
@@ -81,7 +81,9 @@ class SolidService {
   ): Promise<any> => {
     const fetchSessionData = session.fetch;
     let myCovidFile: any;
-    const info = [date, certificaat, validationDate];
+
+    const d = new Date(date);
+    const v = new Date(validationDate);
 
     try {
       myCovidFile = await getSolidDataset(cronosURL, {
@@ -99,13 +101,62 @@ class SolidService {
       }
     }
 
-    for (let i = 0; i < info.length; i++) {
-      let title = createThing({ name: `title${i}` });
-      title = addUrl(title, RDF.type, AS.Article);
-      title = addStringNoLocale(title, SCHEMA_INRUPT.name, info[i]);
-      myCovidFile = setThing(myCovidFile, title);
+    let covidTypeThing;
+    let dateThing;
+    let dateUntilThing;
+    switch (certificaat) {
+      case 'vaccinatiecertificaat':
+        covidTypeThing = createThing({ name: `HC1.v` });
+        covidTypeThing = addUrl(
+          covidTypeThing,
+          RDF.type,
+          `http://hl7.eu/fhir/ig/dcc/StructureDefinition/v`,
+        );
+
+        dateThing = createThing({ name: `HC1.v.df` });
+        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, d);
+
+        dateUntilThing = createThing({ name: `HC1.v.du` });
+        dateUntilThing = addDate(dateUntilThing, SCHEMA_INRUPT.endDate, v);
+
+        break;
+      case 'herstelcertificaat':
+        covidTypeThing = createThing({ name: `HC1.r` });
+        covidTypeThing = addUrl(
+          covidTypeThing,
+          RDF.type,
+          `http://hl7.eu/fhir/ig/dcc/StructureDefinition/r`,
+        );
+
+        dateThing = createThing({ name: `HC1.r.df` });
+        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, d);
+
+        dateUntilThing = createThing({ name: `HC1.r.du` });
+        dateUntilThing = addDate(dateUntilThing, SCHEMA_INRUPT.endDate, v);
+        break;
+      case 'testcertificaat':
+        covidTypeThing = createThing({ name: `HC1.t` });
+        covidTypeThing = addUrl(
+          covidTypeThing,
+          RDF.type,
+          `http://hl7.eu/fhir/ig/dcc/StructureDefinition/t`,
+        );
+
+        dateThing = createThing({ name: `HC1.t.df` });
+
+        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, d);
+
+        dateUntilThing = createThing({ name: `HC1.t.du` });
+
+        dateUntilThing = addDate(dateUntilThing, SCHEMA_INRUPT.endDate, v);
+        break;
     }
 
+    const dataItems = [covidTypeThing, dateThing, dateUntilThing];
+
+    for (let i = 0; i < dataItems.length; i++) {
+      myCovidFile = setThing(myCovidFile, dataItems[i]);
+    }
     try {
       let savedCovidInfo = await saveSolidDatasetAt(cronosURL, myCovidFile, {
         fetch: fetchSessionData,
