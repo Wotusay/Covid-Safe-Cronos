@@ -82,8 +82,8 @@ class SolidService {
     const fetchSessionData = session.fetch;
     let myCovidFile: any;
 
-    const d = new Date(date);
-    const v = new Date(validationDate);
+    const dateObj = new Date(date);
+    const validationObj = new Date(validationDate);
 
     try {
       myCovidFile = await getSolidDataset(cronosURL, {
@@ -114,10 +114,14 @@ class SolidService {
         );
 
         dateThing = createThing({ name: `HC1.v.df` });
-        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, d);
+        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, dateObj);
 
         dateUntilThing = createThing({ name: `HC1.v.du` });
-        dateUntilThing = addDate(dateUntilThing, SCHEMA_INRUPT.endDate, v);
+        dateUntilThing = addDate(
+          dateUntilThing,
+          SCHEMA_INRUPT.endDate,
+          validationObj,
+        );
 
         break;
       case 'herstelcertificaat':
@@ -129,10 +133,14 @@ class SolidService {
         );
 
         dateThing = createThing({ name: `HC1.r.df` });
-        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, d);
+        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, dateObj);
 
         dateUntilThing = createThing({ name: `HC1.r.du` });
-        dateUntilThing = addDate(dateUntilThing, SCHEMA_INRUPT.endDate, v);
+        dateUntilThing = addDate(
+          dateUntilThing,
+          SCHEMA_INRUPT.endDate,
+          validationObj,
+        );
         break;
       case 'testcertificaat':
         covidTypeThing = createThing({ name: `HC1.t` });
@@ -144,11 +152,15 @@ class SolidService {
 
         dateThing = createThing({ name: `HC1.t.df` });
 
-        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, d);
+        dateThing = addDate(dateThing, SCHEMA_INRUPT.startDate, dateObj);
 
         dateUntilThing = createThing({ name: `HC1.t.du` });
 
-        dateUntilThing = addDate(dateUntilThing, SCHEMA_INRUPT.endDate, v);
+        dateUntilThing = addDate(
+          dateUntilThing,
+          SCHEMA_INRUPT.endDate,
+          validationObj,
+        );
         break;
     }
 
