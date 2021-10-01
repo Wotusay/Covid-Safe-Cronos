@@ -166,9 +166,10 @@ class SolidService {
 
     const dataItems = [covidTypeThing, dateThing, dateUntilThing];
 
-    for (let i = 0; i < dataItems.length; i++) {
-      myCovidFile = setThing(myCovidFile, dataItems[i]);
-    }
+    dataItems.forEach(dataItem => {
+      myCovidFile = setThing(myCovidFile, dataItem);
+    });
+
     try {
       let savedCovidInfo = await saveSolidDatasetAt(cronosURL, myCovidFile, {
         fetch: fetchSessionData,
