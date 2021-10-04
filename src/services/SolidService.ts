@@ -17,6 +17,7 @@ import {
   setAgentResourceAccess,
   saveAclFor,
   addDate,
+  saveFileInContainer,
 } from '@inrupt/solid-client';
 
 import { SCHEMA_INRUPT, RDF } from '@inrupt/vocab-common-rdf';
@@ -29,6 +30,22 @@ class SolidService {
     this.status = '';
     this.doneCreatingFiles = false;
   }
+
+  uploadFile = async (
+    file: any,
+    targetLink: string,
+    session: any,
+  ): Promise<void> => {
+    try {
+      await saveFileInContainer(targetLink, file, {
+        slug: file.name,
+        contentType: file.type,
+        fetch: session.fetch,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   allowAccesToUsers = async (
     fileLink: string,

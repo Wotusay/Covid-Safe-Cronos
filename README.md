@@ -42,6 +42,12 @@ There are some rules you can set for your database but these are optional if you
       }
     }
 
+### Firebase Authentication
+
+I have followed a guide that explains how you can setup the microsoft intergation with Firebase. [Just follow these steps and you will be fine](https://medium.com/@susanna2222/swift-integrate-firebase-with-microsoft-authenticate-c8f1d42b11f1)
+
+[More explainattion is on the Manager app about the authentication.](https://github.com/Wotusay/manager-app)
+
 ### Project setup
 
 Just pull in the repository and place the .env file in the folder that has been pulled in.
