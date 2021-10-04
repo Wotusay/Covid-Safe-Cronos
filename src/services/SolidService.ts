@@ -35,7 +35,7 @@ class SolidService {
     file: any,
     targetLink: string,
     session: any,
-  ): Promise<any> => {
+  ): Promise<void> => {
     try {
       await saveFileInContainer(targetLink, file, {
         slug: file.name,

@@ -21,14 +21,14 @@ class SolidStore {
     this.ttlStatus = false;
   }
 
-  handleFiles = async (file: any, session: any): Promise<any> => {
+  handleFiles = async (file: any, session: any): Promise<void> => {
     const { webId } = session.info;
     const spiltLink = webId.split('/');
     const fileLink = `https://${spiltLink[2]}/cronos/covid/`;
     await this.solidService.uploadFile(file, fileLink, session);
   };
 
-  grantAccesToCovidFile = async (session: any, user: string): Promise<any> => {
+  grantAccesToCovidFile = async (session: any, user: string): Promise<void> => {
     const { webId } = session.info;
     const spiltLink = webId.split('/');
     const fileLink = `https://${spiltLink[2]}/cronos/covid/covid__info`;
@@ -40,7 +40,7 @@ class SolidStore {
     date: string,
     certificaat: string,
     session: any,
-  ): Promise<any> => {
+  ): Promise<void> => {
     console.log(session.info);
     const { webId } = session.info;
     const spiltLink = webId.split('/');
