@@ -13,6 +13,11 @@ const FormCovid = (): FC => {
   const [file, setFile] = useState();
   const { solidStore } = useStores();
 
+  const handleFiles = (e: any): void => {
+    const file = e.target.files[0];
+    setFile(file);
+  };
+
   const handleSubmit = async (e): Promise<any> => {
     e.preventDefault();
     await solidStore.createCovidFile(date, certificaat, session);
@@ -65,9 +70,7 @@ const FormCovid = (): FC => {
         <input
           type="file"
           required
-          onChange={e => {
-            setFile(e.target.files[0]);
-          }}
+          onChange={handleFiles}
           id="covidfile"
           name="covidfile"
         />
