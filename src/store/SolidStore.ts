@@ -21,6 +21,13 @@ class SolidStore {
     this.ttlStatus = false;
   }
 
+  handleFiles = async (file: any, session: any): Promise<any> => {
+    const { webId } = session.info;
+    const spiltLink = webId.split('/');
+    const fileLink = `https://${spiltLink[2]}/cronos/covid/`;
+    await this.solidService.uploadFile(file, fileLink, session);
+  };
+
   grantAccesToCovidFile = async (session: any, user: string): Promise<any> => {
     const { webId } = session.info;
     const spiltLink = webId.split('/');
