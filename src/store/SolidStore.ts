@@ -84,6 +84,7 @@ class SolidStore {
 decorate(SolidStore, {
   ttlStatus: observable,
   createCovidFile: action,
+  status: observable,
   grantAccesToCovidFile: action,
 });
 
