@@ -28,14 +28,6 @@ class SolidStore {
     await this.solidService.uploadFile(file, fileLink, session);
   };
 
-  grantAccesToCovidFile = async (session: any, user: string): Promise<void> => {
-    const { webId } = session.info;
-    const spiltLink = webId.split('/');
-    const fileLink = `https://${spiltLink[2]}/cronos/covid/covid__info`;
-    const agentLink = `https://${user}.solidcommunity.net/profile/card#me`;
-    await this.solidService.allowAccesToUsers(fileLink, agentLink, session);
-  };
-
   createCovidFile = async (
     date: string,
     certificaat: string,
@@ -85,7 +77,7 @@ decorate(SolidStore, {
   ttlStatus: observable,
   createCovidFile: action,
   status: observable,
-  grantAccesToCovidFile: action,
+  handleFiles: observable,
 });
 
 export default SolidStore;

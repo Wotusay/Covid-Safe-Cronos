@@ -8,14 +8,6 @@ import {
   getThingAll,
   getStringNoLocale,
   removeThing,
-  getSolidDatasetWithAcl,
-  hasResourceAcl,
-  hasFallbackAcl,
-  hasAccessibleAcl,
-  createAclFromFallbackAcl,
-  getResourceAcl,
-  setAgentResourceAccess,
-  saveAclFor,
   addDate,
   saveFileInContainer,
 } from '@inrupt/solid-client';
@@ -45,43 +37,6 @@ class SolidService {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  allowAccesToUsers = async (
-    fileLink: string,
-    agentLink: string,
-    session: any,
-  ): Promise<any> => {
-    const fetchSessionData = session.fetch;
-    const myDataSetWithAcl = await getSolidDatasetWithAcl(fileLink, {
-      fetch: fetchSessionData,
-    });
-    let resourceAcl;
-
-    if (!hasResourceAcl(myDataSetWithAcl)) {
-      if (!hasAccessibleAcl(myDataSetWithAcl)) {
-        throw new Error(
-          'The current user does not have permission to change access rights to this Resource.',
-        );
-      }
-      if (!hasFallbackAcl(myDataSetWithAcl)) {
-        throw new Error(
-          'The current user does not have permission to see who currently has access to this Resource.',
-        );
-      }
-      resourceAcl = createAclFromFallbackAcl(myDataSetWithAcl);
-    } else {
-      resourceAcl = getResourceAcl(myDataSetWithAcl);
-    }
-
-    const updatedAcl = setAgentResourceAccess(resourceAcl, agentLink, {
-      read: true,
-      append: false,
-      write: true,
-      control: true,
-    });
-
-    await saveAclFor(myDataSetWithAcl, updatedAcl, { fetch: fetchSessionData });
   };
 
   setStatuses = (): any => {

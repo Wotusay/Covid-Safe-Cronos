@@ -9,7 +9,6 @@ const FormCovid = (): FC => {
   const { session } = useSession();
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [date, setDate] = useState();
-  const [user, setUser] = useState();
   const [file, setFile] = useState();
   const { solidStore } = useStores();
 
@@ -25,8 +24,6 @@ const FormCovid = (): FC => {
     if (file) {
       await solidStore.handleFiles(file, session);
     }
-
-    await solidStore.grantAccesToCovidFile(session, user);
   };
   return useObserver(() => (
     <>
@@ -59,14 +56,6 @@ const FormCovid = (): FC => {
           required
           type="date"
           id="geldigheidsperiode"
-        />
-
-        <input
-          placeholder="Username to access"
-          className="border-b-2 border-gray-900"
-          onChange={e => setUser(e.target.value)}
-          type="text"
-          id="user-access"
         />
 
         <input
