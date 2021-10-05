@@ -127,7 +127,7 @@ class SolidService {
         covidTypeThing = addUrl(
           covidTypeThing,
           RDF.type,
-          `http://hl7.eu/fhir/ig/dcc/StructureDefinition/v`,
+          `https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-v-definitions.html#v`,
         );
 
         dateThing = createThing({ name: `HC1.v.df` });
@@ -146,7 +146,7 @@ class SolidService {
         covidTypeThing = addUrl(
           covidTypeThing,
           RDF.type,
-          `http://hl7.eu/fhir/ig/dcc/StructureDefinition/r`,
+          `https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-r-definitions.html#r`,
         );
 
         dateThing = createThing({ name: `HC1.r.df` });
@@ -164,7 +164,7 @@ class SolidService {
         covidTypeThing = addUrl(
           covidTypeThing,
           RDF.type,
-          `http://hl7.eu/fhir/ig/dcc/StructureDefinition/t`,
+          `https://build.fhir.org/ig/hl7-eu/dgc/StructureDefinition-t-definitions.html#t`,
         );
 
         dateThing = createThing({ name: `HC1.t.df` });
