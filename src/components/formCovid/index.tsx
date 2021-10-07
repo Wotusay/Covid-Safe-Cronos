@@ -14,6 +14,8 @@ const FormCovid = (): FC => {
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [date, setDate] = useState();
   const [file, setFile] = useState();
+  const [dosis, setDosis] = useState();
+  const [id, setId] = useState();
   const { solidStore } = useStores();
 
   const handleFiles = async (e: any): Promise<void> => {
@@ -31,11 +33,19 @@ const FormCovid = (): FC => {
           page.getTextContent().then(textContent => {
             // Retrieving text per page as string
             if (textContent.items.some(item => item.str === 'COVID-19')) {
-              const date = textContent.items[6].str;
               const typeCertifcate = textContent.items[30].str;
-              const certificateIdentifier = textContent.items[68].str;
-              const dosis = textContent.items[10].str;
-              console.info(date, typeCertifcate, certificateIdentifier, dosis);
+              if (
+                typeCertifcate === 'VACCINATION CERTIFICATE' &&
+                certificaat === 'vaccinatiecertificaat'
+              ) {
+                const date = textContent.items[6].str;
+                const certificateIdentifier = textContent.items[68].str;
+                const dosis = textContent.items[10].str;
+
+                setDosis(dosis);
+                setDate(date);
+                setId(certificateIdentifier);
+              }
             } else {
               return;
             }
