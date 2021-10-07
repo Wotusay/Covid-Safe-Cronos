@@ -32,6 +32,8 @@ class SolidStore {
     date: string,
     certificaat: string,
     session: any,
+    dosis: string,
+    id: string,
   ): Promise<void> => {
     console.log(session.info);
     const { webId } = session.info;
@@ -40,13 +42,25 @@ class SolidStore {
     const username = spiltDot[0];
     const cronosURL = `https://${spiltLink[2]}/cronos/covid/covid__info`;
     const validationDate = this.validationCalculator(date, certificaat);
-    await this.solidService.createTTLFile(
-      cronosURL,
-      session,
-      date,
-      certificaat,
-      validationDate,
-    );
+    if (dosis && id) {
+      await this.solidService.createTTLFile(
+        cronosURL,
+        session,
+        date,
+        certificaat,
+        validationDate,
+        dosis,
+        id,
+      );
+    } else {
+      await this.solidService.createTTLFile(
+        cronosURL,
+        session,
+        date,
+        certificaat,
+        validationDate,
+      );
+    }
     await this.firebaseService.writeUserData(username, date, validationDate);
     this.status = this.solidService.status;
   };

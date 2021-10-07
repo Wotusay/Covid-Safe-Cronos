@@ -10,6 +10,7 @@ import {
   removeThing,
   addDate,
   saveFileInContainer,
+  addStringNoLocale,
 } from '@inrupt/solid-client';
 
 import { SCHEMA_INRUPT, RDF } from '@inrupt/vocab-common-rdf';
@@ -50,6 +51,8 @@ class SolidService {
     date: string,
     certificaat: string,
     validationDate: string,
+    dosis: string,
+    id: string,
   ): Promise<any> => {
     const fetchSessionData = session.fetch;
     let myCovidFile: any;
@@ -76,6 +79,7 @@ class SolidService {
     let covidTypeThing;
     let dateThing;
     let dateUntilThing;
+    let idThing;
     switch (certificaat) {
       case 'vaccinatiecertificaat':
         covidTypeThing = createThing({ name: `HC1.v` });
@@ -95,6 +99,10 @@ class SolidService {
           validationObj,
         );
 
+        if (id) {
+          idThing = createThing({ name: `HC1.v.id` });
+          idThing = addStringNoLocale(idThing, SCHEMA_INRUPT.identifier, id);
+        }
         break;
       case 'herstelcertificaat':
         covidTypeThing = createThing({ name: `HC1.r` });
@@ -136,7 +144,12 @@ class SolidService {
         break;
     }
 
-    const dataItems = [covidTypeThing, dateThing, dateUntilThing];
+    let dataItems;
+    if (idThing) {
+      dataItems = [covidTypeThing, dateThing, dateUntilThing, idThing];
+    } else {
+      dataItems = [covidTypeThing, dateThing, dateUntilThing];
+    }
 
     dataItems.forEach(dataItem => {
       myCovidFile = setThing(myCovidFile, dataItem);

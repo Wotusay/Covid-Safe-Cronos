@@ -57,7 +57,7 @@ const FormCovid = (): FC => {
 
   const handleSubmit = async (e): Promise<any> => {
     e.preventDefault();
-    await solidStore.createCovidFile(date, certificaat, session);
+    await solidStore.createCovidFile(date, certificaat, session, dosis, id);
 
     if (file) {
       await solidStore.handleFiles(file, session);
@@ -87,14 +87,6 @@ const FormCovid = (): FC => {
           <option value="testcertificaat"> Testcertificaat </option>
           <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
-
-        <input
-          onChange={e => setDate(e.target.value)}
-          min="2020-12-12"
-          required
-          type="date"
-          id="geldigheidsperiode"
-        />
 
         <input
           type="file"
