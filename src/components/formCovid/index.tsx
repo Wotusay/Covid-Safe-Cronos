@@ -1,9 +1,13 @@
 import { FOAF } from '@inrupt/lit-generated-vocab-common';
 import { Text, useSession } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
+import pdfjs from 'pdfjs-dist';
 import React, { FC, useState } from 'react';
 
 import { useStores } from '../../contexts/index';
+
+pdfjs.GlobalWorkerOptions.workerSrc =
+  'https://cdn.bootcss.com/pdf.js/2.4.456/pdf.worker.js';
 
 const FormCovid = (): FC => {
   const { session } = useSession();
@@ -12,9 +16,33 @@ const FormCovid = (): FC => {
   const [file, setFile] = useState();
   const { solidStore } = useStores();
 
-  const handleFiles = (e: any): void => {
+  const handleFiles = async (e: any): Promise<void> => {
     const file = e.target.files[0];
     setFile(file);
+
+    if (file) {
+      const buffer = await file.arrayBuffer();
+      const loadingTask = pdfjs.getDocument({
+        data: buffer,
+      });
+      loadingTask.promise.then(pdfDocument => {
+        pdfDocument.getPage(1).then(page => {
+          page.getViewport({ scale: 100 });
+          page.getTextContent().then(textContent => {
+            // Retrieving text per page as string
+            if (textContent.items.some(item => item.str === 'COVID-19')) {
+              const date = textContent.items[6].str;
+              const typeCertifcate = textContent.items[30].str;
+              const certificateIdentifier = textContent.items[68].str;
+              const dosis = textContent.items[10].str;
+              console.info(date, typeCertifcate, certificateIdentifier, dosis);
+            } else {
+              return;
+            }
+          });
+        });
+      });
+    }
   };
 
   const handleSubmit = async (e): Promise<any> => {
@@ -60,6 +88,7 @@ const FormCovid = (): FC => {
 
         <input
           type="file"
+          accept="application/pdf"
           onChange={handleFiles}
           id="covidfile"
           name="covidfile"
