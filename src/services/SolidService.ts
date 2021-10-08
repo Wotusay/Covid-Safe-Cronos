@@ -11,6 +11,7 @@ import {
   addDate,
   saveFileInContainer,
   addStringNoLocale,
+  addInteger,
 } from '@inrupt/solid-client';
 
 import { SCHEMA_INRUPT, RDF } from '@inrupt/vocab-common-rdf';
@@ -59,6 +60,7 @@ class SolidService {
 
     const dateObj = new Date(date);
     const validationObj = new Date(validationDate);
+    const dosisInt = dosis === '2/2' ? 2 : dosis === '1/2' ? 1 : undefined;
 
     try {
       myCovidFile = await getSolidDataset(cronosURL, {
@@ -80,6 +82,7 @@ class SolidService {
     let dateThing;
     let dateUntilThing;
     let idThing;
+    let dosisThing;
     switch (certificaat) {
       case 'vaccinatiecertificaat':
         covidTypeThing = createThing({ name: `HC1.v` });
@@ -99,9 +102,16 @@ class SolidService {
           validationObj,
         );
 
-        if (id) {
+        if (id !== '' && dosisInt) {
           idThing = createThing({ name: `HC1.v.id` });
           idThing = addStringNoLocale(idThing, SCHEMA_INRUPT.identifier, id);
+
+          dosisThing = createThing({ name: `HC1.v.sd` });
+          dosisThing = addInteger(
+            dosisThing,
+            SCHEMA_INRUPT.identifier,
+            dosisInt,
+          );
         }
         break;
       case 'herstelcertificaat':
@@ -146,7 +156,13 @@ class SolidService {
 
     let dataItems;
     if (idThing) {
-      dataItems = [covidTypeThing, dateThing, dateUntilThing, idThing];
+      dataItems = [
+        covidTypeThing,
+        dateThing,
+        dateUntilThing,
+        idThing,
+        dosisThing,
+      ];
     } else {
       dataItems = [covidTypeThing, dateThing, dateUntilThing];
     }
