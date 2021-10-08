@@ -20,6 +20,10 @@ const FormCovid = (): FC => {
   const [group, setGroup] = useState<string>('wheelhouse');
   const { solidStore } = useStores();
 
+  const handleDate = (e: any): void => {
+    setDate(e.target.value);
+  };
+
   const handleGroup = (e: any): void => {
     setGroup(e.target.value);
   };
@@ -41,7 +45,6 @@ const FormCovid = (): FC => {
         pdfDocument.getPage(1).then(page => {
           page.getViewport({ scale: 100 });
           page.getTextContent().then(textContent => {
-            // Retrieving text per page as string
             if (textContent.items.some(item => item.str === 'COVID-19')) {
               const typeCertifcate: string = textContent.items[30].str;
               if (
@@ -119,7 +122,7 @@ const FormCovid = (): FC => {
         {certificaat === 'testcertificaat' ||
         certificaat === 'herstelcertificaat' ? (
           <input
-            onChange={e => setDate(e.target.value)}
+            onChange={handleDate}
             min="2020-12-12"
             required
             type="date"
