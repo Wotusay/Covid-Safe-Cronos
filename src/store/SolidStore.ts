@@ -34,6 +34,7 @@ class SolidStore {
     session: any,
     dosis: string,
     id: string,
+    group: string,
   ): Promise<void> => {
     console.log(session.info);
     const { webId } = session.info;
@@ -41,34 +42,41 @@ class SolidStore {
     const spiltDot = spiltLink[2].split('.');
     const username = spiltDot[0];
     const cronosURL = `https://${spiltLink[2]}/cronos/covid/covid__info`;
-    const validationDate = this.validationCalculator(date, certificaat);
-    if (dosis && id) {
-      await this.solidService.createTTLFile(
-        cronosURL,
-        session,
+    let validationDate: string;
+    if (date !== '') {
+      validationDate = this.validationCalculator(date, certificaat);
+      if (dosis !== '' && id !== '' && date !== '') {
+        await this.solidService.createTTLFile(
+          cronosURL,
+          session,
+          date,
+          certificaat,
+          validationDate,
+          dosis,
+          id,
+        );
+      } else {
+        await this.solidService.createTTLFile(
+          cronosURL,
+          session,
+          date,
+          certificaat,
+          validationDate,
+        );
+      }
+      await this.firebaseService.writeUserData(
+        username,
         date,
-        certificaat,
         validationDate,
-        dosis,
-        id,
+        group,
       );
+      this.status = this.solidService.status;
     } else {
-      await this.solidService.createTTLFile(
-        cronosURL,
-        session,
-        date,
-        certificaat,
-        validationDate,
-      );
+      this.status = 'Something went wrong with saving the data';
     }
-    await this.firebaseService.writeUserData(username, date, validationDate);
-    this.status = this.solidService.status;
   };
 
-  validationCalculator = (
-    date: string,
-    certificaat: string,
-  ): Promise<string> => {
+  validationCalculator = (date: string, certificaat: string): string => {
     const startDay = dayjs(date);
     let validationDay;
     switch (certificaat) {

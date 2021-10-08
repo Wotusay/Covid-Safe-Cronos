@@ -1,5 +1,6 @@
 import { FOAF } from '@inrupt/lit-generated-vocab-common';
 import { Text, useSession } from '@inrupt/solid-ui-react';
+import { useObserver } from 'mobx-react-lite';
 import pdfjs from 'pdfjs-dist';
 import React, { FC, useState } from 'react';
 
@@ -13,10 +14,19 @@ const FormCovid = (): FC => {
   const { session } = useSession();
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [file, setFile] = useState();
-  const [date, setDate] = useState<boolean>('');
-  const [dosis, setDosis] = useState<string>();
-  const [id, setId] = useState<string>();
+  const [date, setDate] = useState<string>('');
+  const [dosis, setDosis] = useState<string>('');
+  const [id, setId] = useState<string>('');
+  const [group, setGroup] = useState<string>('wheelhouse');
   const { solidStore } = useStores();
+
+  const handleGroup = (e: any): void => {
+    setGroup(e.target.value);
+  };
+
+  const handleCertificaat = (e: any): void => {
+    setCertificaat(e.target.value);
+  };
 
   const handleFiles = async (e: any): Promise<void> => {
     const targetFile = e.target.files[0];
@@ -57,13 +67,24 @@ const FormCovid = (): FC => {
 
   const handleSubmit = async (e): Promise<void> => {
     e.preventDefault();
-    await solidStore.createCovidFile(date, certificaat, session, dosis, id);
+    if (dosis !== '' && date !== '' && id !== '') {
+      await solidStore.createCovidFile(
+        date,
+        certificaat,
+        session,
+        dosis,
+        id,
+        group,
+      );
+    } else {
+      solidStore.status = 'Wait till the file is done loading';
+    }
 
     if (file) {
       await solidStore.handleFiles(file, session);
     }
   };
-  return (
+  return useObserver(() => (
     <>
       <p className="flex content-center justify-center gap-1 mt-10 text-2xl font-bold mb-7">
         Covid gegevens van {<Text property={FOAF.name.iri.value} />}
@@ -76,7 +97,7 @@ const FormCovid = (): FC => {
         className="grid content-center justify-center gap-7 mb-7 "
       >
         <select
-          onChange={e => setCertificaat(e.target.value)}
+          onChange={handleCertificaat}
           required
           name="certificaten"
           id="certificaten"
@@ -88,19 +109,38 @@ const FormCovid = (): FC => {
           <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
 
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={handleFiles}
-          id="covidfile"
-          name="covidfile"
-        />
+        <select onChange={handleGroup} required name="groep" id="groep">
+          <option defaultValue value="wheelhouse">
+            Wheelhouse
+          </option>
+          <option value="konsolidate"> Konsolidate </option>
+          <option value="craftworkz">Craftworkz </option>
+        </select>
+        {certificaat === 'testcertificaat' ||
+        certificaat === 'herstelcertificaat' ? (
+          <input
+            onChange={e => setDate(e.target.value)}
+            min="2020-12-12"
+            required
+            type="date"
+            id="geldigheidsperiode"
+          />
+        ) : (
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFiles}
+            id="covidfile"
+            name="covidfile"
+          />
+        )}
         {file ? (
           <CovidInformation
             certificaat={certificaat}
             date={date}
             id={id}
             dosis={dosis}
+            group={group}
           />
         ) : null}
         <input
@@ -110,7 +150,7 @@ const FormCovid = (): FC => {
         />
       </form>
     </>
-  );
+  ));
 };
 
 export default FormCovid;
