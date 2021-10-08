@@ -70,7 +70,7 @@ const FormCovid = (): FC => {
 
   const handleSubmit = async (e): Promise<void> => {
     e.preventDefault();
-    if (dosis !== '' && date !== '' && id !== '') {
+    if (id !== '' && certificaat === 'vaccinatiecertificaat') {
       await solidStore.createCovidFile(
         date,
         certificaat,
@@ -80,7 +80,7 @@ const FormCovid = (): FC => {
         group,
       );
     } else {
-      solidStore.status = 'Wait till the file is done loading';
+      await solidStore.createCovidFile(date, certificaat, session);
     }
 
     if (file) {
