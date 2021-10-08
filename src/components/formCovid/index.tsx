@@ -1,10 +1,10 @@
 import { FOAF } from '@inrupt/lit-generated-vocab-common';
 import { Text, useSession } from '@inrupt/solid-ui-react';
-import { useObserver } from 'mobx-react-lite';
 import pdfjs from 'pdfjs-dist';
 import React, { FC, useState } from 'react';
 
 import { useStores } from '../../contexts/index';
+import CovidInformation from '../covidInformation';
 
 pdfjs.GlobalWorkerOptions.workerSrc =
   'https://cdn.bootcss.com/pdf.js/2.4.456/pdf.worker.js';
@@ -12,18 +12,18 @@ pdfjs.GlobalWorkerOptions.workerSrc =
 const FormCovid = (): FC => {
   const { session } = useSession();
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
-  const [date, setDate] = useState();
   const [file, setFile] = useState();
-  const [dosis, setDosis] = useState();
-  const [id, setId] = useState();
+  const [date, setDate] = useState<boolean>('');
+  const [dosis, setDosis] = useState<string>();
+  const [id, setId] = useState<string>();
   const { solidStore } = useStores();
 
   const handleFiles = async (e: any): Promise<void> => {
-    const file = e.target.files[0];
-    setFile(file);
+    const targetFile = e.target.files[0];
+    setFile(targetFile);
 
-    if (file) {
-      const buffer = await file.arrayBuffer();
+    if (targetFile) {
+      const buffer = await targetFile.arrayBuffer();
       const loadingTask = pdfjs.getDocument({
         data: buffer,
       });
@@ -33,14 +33,14 @@ const FormCovid = (): FC => {
           page.getTextContent().then(textContent => {
             // Retrieving text per page as string
             if (textContent.items.some(item => item.str === 'COVID-19')) {
-              const typeCertifcate = textContent.items[30].str;
+              const typeCertifcate: string = textContent.items[30].str;
               if (
                 typeCertifcate === 'VACCINATION CERTIFICATE' &&
                 certificaat === 'vaccinatiecertificaat'
               ) {
-                const date = textContent.items[6].str;
-                const certificateIdentifier = textContent.items[68].str;
-                const dosis = textContent.items[10].str;
+                const date: string = textContent.items[6].str;
+                const certificateIdentifier: string = textContent.items[68].str;
+                const dosis: string = textContent.items[10].str;
 
                 setDosis(dosis);
                 setDate(date);
@@ -55,7 +55,7 @@ const FormCovid = (): FC => {
     }
   };
 
-  const handleSubmit = async (e): Promise<any> => {
+  const handleSubmit = async (e): Promise<void> => {
     e.preventDefault();
     await solidStore.createCovidFile(date, certificaat, session, dosis, id);
 
@@ -63,7 +63,7 @@ const FormCovid = (): FC => {
       await solidStore.handleFiles(file, session);
     }
   };
-  return useObserver(() => (
+  return (
     <>
       <p className="flex content-center justify-center gap-1 mt-10 text-2xl font-bold mb-7">
         Covid gegevens van {<Text property={FOAF.name.iri.value} />}
@@ -95,7 +95,14 @@ const FormCovid = (): FC => {
           id="covidfile"
           name="covidfile"
         />
-
+        {file ? (
+          <CovidInformation
+            certificaat={certificaat}
+            date={date}
+            id={id}
+            dosis={dosis}
+          />
+        ) : null}
         <input
           type="submit"
           className="p-5 font-semibold text-white bg-indigo-700 rounded-sm w-44"
@@ -103,7 +110,7 @@ const FormCovid = (): FC => {
         />
       </form>
     </>
-  ));
+  );
 };
 
 export default FormCovid;
