@@ -1,10 +1,6 @@
 {
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "./**/*"
-  ],
+  "exclude": ["node_modules"],
+  "include": ["src"],
   "compilerOptions": {
     "target": "es2017",
     "module": "esnext",
@@ -19,11 +15,7 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "preserveWatchOutput": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,

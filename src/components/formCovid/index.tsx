@@ -1,25 +1,86 @@
 import { FOAF } from '@inrupt/lit-generated-vocab-common';
 import { Text, useSession } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
+import pdfjs from 'pdfjs-dist';
 import React, { FC, useState } from 'react';
 
 import { useStores } from '../../contexts/index';
+import CovidInformation from '../covidInformation';
+
+pdfjs.GlobalWorkerOptions.workerSrc =
+  'https://cdn.bootcss.com/pdf.js/2.4.456/pdf.worker.js';
 
 const FormCovid = (): FC => {
   const { session } = useSession();
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
-  const [date, setDate] = useState();
   const [file, setFile] = useState();
+  const [date, setDate] = useState<string>('');
+  const [dosis, setDosis] = useState<string>('');
+  const [id, setId] = useState<string>('');
+  const [group, setGroup] = useState<string>('wheelhouse');
   const { solidStore } = useStores();
 
-  const handleFiles = (e: any): void => {
-    const file = e.target.files[0];
-    setFile(file);
+  const handleDateChange = (e: any): void => {
+    setDate(e.target.value);
   };
 
-  const handleSubmit = async (e): Promise<any> => {
+  const handleGroupChange = (e: any): void => {
+    setGroup(e.target.value);
+  };
+
+  const handleCertificaatChange = (e: any): void => {
+    setCertificaat(e.target.value);
+  };
+
+  const handleFilesChange = async (e: any): Promise<void> => {
+    const targetFile = e.target.files[0];
+    setFile(targetFile);
+
+    if (targetFile) {
+      const buffer = await targetFile.arrayBuffer();
+      const loadingTask = pdfjs.getDocument({
+        data: buffer,
+      });
+      loadingTask.promise.then(pdfDocument => {
+        pdfDocument.getPage(1).then(page => {
+          page.getViewport({ scale: 100 });
+          page.getTextContent().then(textContent => {
+            if (textContent.items.some(item => item.str === 'COVID-19')) {
+              const typeCertifcate: string = textContent.items[30].str;
+              if (
+                typeCertifcate === 'VACCINATION CERTIFICATE' &&
+                certificaat === 'vaccinatiecertificaat'
+              ) {
+                const date: string = textContent.items[6].str;
+                const certificateIdentifier: string = textContent.items[68].str;
+                const dosis: string = textContent.items[10].str;
+
+                setDosis(dosis);
+                setDate(date);
+                setId(certificateIdentifier);
+              }
+            }
+          });
+        });
+      });
+    }
+  };
+
+  const handleSubmit = async (e): Promise<void> => {
     e.preventDefault();
-    await solidStore.createCovidFile(date, certificaat, session);
+    solidStore.status = id === '' ? 'loading data' : '';
+    if (id !== '' && certificaat === 'vaccinatiecertificaat') {
+      await solidStore.createCovidFile(
+        date,
+        certificaat,
+        session,
+        dosis,
+        id,
+        group,
+      );
+    } else {
+      await solidStore.createCovidFile(date, certificaat, session);
+    }
 
     if (file) {
       await solidStore.handleFiles(file, session);
@@ -38,10 +99,11 @@ const FormCovid = (): FC => {
         className="grid content-center justify-center gap-7 mb-7 "
       >
         <select
-          onChange={e => setCertificaat(e.target.value)}
+          onChange={handleCertificaatChange}
           required
           name="certificaten"
           id="certificaten"
+          value={certificaat}
         >
           <option defaultValue value="vaccinatiecertificaat">
             Vaccinatiecertificaat
@@ -50,21 +112,46 @@ const FormCovid = (): FC => {
           <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
 
-        <input
-          onChange={e => setDate(e.target.value)}
-          min="2020-12-12"
+        <select
+          onChange={handleGroupChange}
+          value={group}
           required
-          type="date"
-          id="geldigheidsperiode"
-        />
-
-        <input
-          type="file"
-          onChange={handleFiles}
-          id="covidfile"
-          name="covidfile"
-        />
-
+          name="groep"
+          id="groep"
+        >
+          <option defaultValue value="wheelhouse">
+            Wheelhouse
+          </option>
+          <option value="konsolidate"> Konsolidate </option>
+          <option value="craftworkz">Craftworkz </option>
+        </select>
+        {certificaat === 'testcertificaat' ||
+        certificaat === 'herstelcertificaat' ? (
+          <input
+            onChange={handleDateChange}
+            min="2020-12-12"
+            required
+            type="date"
+            id="geldigheidsperiode"
+          />
+        ) : (
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFilesChange}
+            id="covidfile"
+            name="covidfile"
+          />
+        )}
+        {file ? (
+          <CovidInformation
+            certificaat={certificaat}
+            date={date}
+            id={id}
+            dosis={dosis}
+            group={group}
+          />
+        ) : null}
         <input
           type="submit"
           className="p-5 font-semibold text-white bg-indigo-700 rounded-sm w-44"

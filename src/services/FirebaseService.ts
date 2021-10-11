@@ -10,9 +10,10 @@ class FirebaseService {
     username: string,
     date: string,
     validate: string,
+    group: string,
   ): Promise<any> => {
     try {
-      await set(ref(this.db, `covid-items/wheelhouse/${username}`), {
+      await set(ref(this.db, `covid-items/${group}/${username}`), {
         username,
         date,
         validate,
