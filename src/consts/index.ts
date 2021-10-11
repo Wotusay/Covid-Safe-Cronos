@@ -1,7 +1,6 @@
 const ROUTES = {
   home: '/',
-  manager: '/manager',
-  worker: '/worker',
+  dashboard: '/dashboard',
 };
 
 export { ROUTES };

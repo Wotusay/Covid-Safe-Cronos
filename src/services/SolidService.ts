@@ -12,6 +12,8 @@ import {
   saveFileInContainer,
   addStringNoLocale,
   addInteger,
+  getDate,
+  getInteger,
 } from '@inrupt/solid-client';
 
 import { SCHEMA_INRUPT, RDF } from '@inrupt/vocab-common-rdf';
@@ -24,6 +26,39 @@ class SolidService {
     this.status = '';
     this.doneCreatingFiles = false;
   }
+
+  getSolidDataCovid = async (session: any, url: string): Promise<any> => {
+    try {
+      const listItem: any[] = [];
+      const myCovidFile = await getSolidDataset(url, {
+        fetch: session.fetch,
+      });
+      const covidInfo = await getThingAll(myCovidFile);
+      covidInfo.forEach(item => {
+        const linkSplit = item.url.split('#');
+        const name = linkSplit[1];
+        const startDate = getDate(item, SCHEMA_INRUPT.startDate);
+        const endDate = getDate(item, SCHEMA_INRUPT.endDate);
+        const id = getStringNoLocale(item, SCHEMA_INRUPT.identifier);
+        const dosis = getInteger(item, SCHEMA_INRUPT.identifier);
+
+        listItem.push(
+          startDate !== null
+            ? startDate
+            : endDate !== null
+            ? endDate
+            : id !== null
+            ? id
+            : dosis !== null
+            ? dosis
+            : name,
+        );
+      });
+      return listItem;
+    } catch (error) {
+      console.info(error);
+    }
+  };
 
   uploadFile = async (
     file: any,
