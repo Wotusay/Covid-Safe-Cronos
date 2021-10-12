@@ -18,10 +18,14 @@ class CovidInfo {
     dosis: number;
     typeCovidCerticate: string;
   }) {
-    this.id = id;
+    if (id) {
+      this.id = id;
+    }
     this.startDate = startDate;
     this.endDate = endDate;
-    this.dosis = dosis;
+    if (dosis) {
+      this.dosis = dosis;
+    }
     this.typeCovidCerticate = typeCovidCerticate;
   }
 }
