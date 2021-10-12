@@ -6,22 +6,26 @@ const CovidInformation = ({
   date,
   dosis,
   group,
+  endDate,
 }: {
   certificaat: string;
   id: string;
   date: string;
-  dosis: string;
-  group: string;
+  endDate: string | undefined | any;
+  dosis: string | undefined;
+  group: string | undefined;
 }): React.FC => {
   return (
     <>
       <p>Data that got fetched: </p>
       <ul>
-        <li> Workplace: {group} </li>
+        {group ? <li> Workplace: {group} </li> : ''}
         <li> Type of certificate: {certificaat} </li>
-        <li> Date: {date} </li>
-        <li> Certificate identifier: {id} </li>
-        <li> Dosises: {dosis} </li>
+        <li>
+          Date: {date} {endDate ? `- ${endDate}` : ''}
+        </li>
+        {id ? <li> Certificate identifier: {id} </li> : ''}
+        {dosis ? <li> Dosises: {dosis} </li> : ''}
       </ul>
     </>
   );

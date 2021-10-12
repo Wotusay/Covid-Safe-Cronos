@@ -91,7 +91,7 @@ const FormCovid = (): FC => {
   return useObserver(() => (
     <>
       <p className="flex content-center justify-center gap-1 mt-10 text-2xl font-bold mb-7">
-        Covid gegevens van {<Text property={FOAF.name.iri.value} />}
+        Vul je covid gegevens aan van {<Text property={FOAF.name.iri.value} />}
       </p>
       <p className="flex content-center justify-center gap-1 font-medium text-green-700 mb-7">
         {solidStore.status}
@@ -145,6 +145,7 @@ const FormCovid = (): FC => {
             id={id}
             dosis={dosis}
             group={group}
+            endDate={undefined}
           />
         ) : null}
         <input
