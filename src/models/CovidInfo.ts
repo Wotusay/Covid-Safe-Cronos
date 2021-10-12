@@ -1,8 +1,8 @@
 class CovidInfo {
-  id: string;
+  id: string | undefined;
   startDate: string;
   endDate: string;
-  dosis: number;
+  dosis: number | undefined;
   typeCovidCerticate: string;
 
   constructor({
