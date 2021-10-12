@@ -9,7 +9,7 @@ const Profile = () => {
   const { session } = useSession();
   const { webId } = session.info;
   const { uiStore } = useStores();
-  console.info(uiStore.checkUploadedFiles(session));
+  uiStore.checkUploadedFiles(session);
 
   return useObserver(() => (
     <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>

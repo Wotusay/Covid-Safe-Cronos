@@ -9,13 +9,13 @@ class UIStore {
   rootStore: RootStore;
   solidService: SolidService;
   solidItems: Array<any>;
-  covidInformation: CovidInfo[];
+  covidInformation: CovidInfo | undefined;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.solidService = new SolidService();
     this.solidItems = [];
-    this.covidInformation = [];
+    this.covidInformation = undefined;
   }
 
   checkUploadedFiles = async (session: any): Promise<any> => {
@@ -28,16 +28,13 @@ class UIStore {
       cronosURL,
     );
 
-    await this.covidInformation.push(
-      new CovidInfo({
-        id: covidInfoObject.id,
-        startDate: dayjs(covidInfoObject.startDate).format('YYYY-MM-DD'),
-        endDate: dayjs(covidInfoObject.endDate).format('YYYY-MM-DD'),
-        dosis: covidInfoObject.dosis,
-        typeCovidCerticate: covidInfoObject.typeCovidCerticate,
-      }),
-    );
-
+    this.covidInformation = new CovidInfo({
+      id: covidInfoObject.id,
+      startDate: dayjs(covidInfoObject.startDate).format('YYYY-MM-DD'),
+      endDate: dayjs(covidInfoObject.endDate).format('YYYY-MM-DD'),
+      dosis: covidInfoObject.dosis,
+      typeCovidCerticate: covidInfoObject.typeCovidCerticate,
+    });
     console.info(this.covidInformation);
   };
 }
