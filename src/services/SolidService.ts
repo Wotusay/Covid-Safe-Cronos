@@ -29,7 +29,7 @@ class SolidService {
 
   getSolidDataCovid = async (session: any, url: string): Promise<any> => {
     try {
-      const listItem: any[] = [];
+      const itemObject: any = {};
       const myCovidFile = await getSolidDataset(url, {
         fetch: session.fetch,
       });
@@ -41,20 +41,26 @@ class SolidService {
         const endDate = getDate(item, SCHEMA_INRUPT.endDate);
         const id = getStringNoLocale(item, SCHEMA_INRUPT.identifier);
         const dosis = getInteger(item, SCHEMA_INRUPT.identifier);
+        const typeCovidCerticate =
+          name === 'HC1.v'
+            ? 'vaccinatiecertificaat'
+            : name === 'HC1.t'
+            ? 'testcertificaat'
+            : 'herstelcertificaat';
 
-        listItem.push(
+        const itemAdder = () =>
           startDate !== null
-            ? startDate
+            ? (itemObject.startDate = startDate)
             : endDate !== null
-            ? endDate
+            ? (itemObject.endDate = endDate)
             : id !== null
-            ? id
+            ? (itemObject.id = id)
             : dosis !== null
-            ? dosis
-            : name,
-        );
+            ? (itemObject.dosis = dosis)
+            : (itemObject.typeCovidCerticate = typeCovidCerticate);
+        itemAdder();
       });
-      return listItem;
+      return itemObject;
     } catch (error) {
       console.info(error);
     }
