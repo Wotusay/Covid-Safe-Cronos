@@ -1,8 +1,8 @@
 import { LoginButton } from '@inrupt/solid-ui-react';
-import React, { FC } from 'react';
+import React from 'react';
 const idp = 'https://solidcommunity.net';
 
-const LoginForm = (): FC => {
+const LoginForm = (): React.ReactElement => {
   return (
     <LoginButton
       authOptions={{ clientName: 'Cronos Covid App' }}
@@ -10,7 +10,7 @@ const LoginForm = (): FC => {
       redirectUrl={window.location.href}
       onError={console.error}
     >
-      <p className="font-semibold float-right p-5 text-white bg-green-700 rounded-sm">
+      <p className="float-right p-5 font-semibold text-white bg-green-700 rounded-sm">
         Login
       </p>
     </LoginButton>

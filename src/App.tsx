@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 import './App.css';
-import React, { FC } from 'react';
+import React from 'react';
 
 import Container from './components/container';
 
-const App = (): FC => {
+const App = (): React.ReactElement => {
 
   return (
       <Container />

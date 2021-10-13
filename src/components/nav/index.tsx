@@ -1,11 +1,11 @@
 import { useSession, LogoutButton } from '@inrupt/solid-ui-react';
-import React, { FC } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { ROUTES } from 'src/consts';
 
 import LoginForm from '../LoginForm';
 
-const Nav = (): FC => {
+const Nav = (): React.ReactElement => {
   const { session, sessionRequestInProgress } = useSession();
 
   return (

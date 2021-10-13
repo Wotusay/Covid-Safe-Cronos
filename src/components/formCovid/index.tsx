@@ -2,7 +2,7 @@ import { FOAF } from '@inrupt/lit-generated-vocab-common';
 import { Text, useSession } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
 import pdfjs from 'pdfjs-dist';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 
 import { useStores } from '../../contexts/index';
 import CovidInformation from '../covidInformation';
@@ -10,14 +10,14 @@ import CovidInformation from '../covidInformation';
 pdfjs.GlobalWorkerOptions.workerSrc =
   'https://cdn.bootcss.com/pdf.js/2.4.456/pdf.worker.js';
 
-const FormCovid = (): FC => {
+const FormCovid = (): React.ReactElement => {
   const { session } = useSession();
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [file, setFile] = useState();
-  const [date, setDate] = useState<string>('');
-  const [dosis, setDosis] = useState<string>('');
-  const [id, setId] = useState<string>('');
-  const [group, setGroup] = useState<string>('wheelhouse');
+  const [date, setDate] = useState('');
+  const [dosis, setDosis] = useState('');
+  const [id, setId] = useState('');
+  const [group, setGroup] = React.useState('wheelhouse');
   const { solidStore } = useStores();
 
   const handleDate = (e: any): void => {
@@ -106,17 +106,13 @@ const FormCovid = (): FC => {
           name="certificaten"
           id="certificaten"
         >
-          <option defaultValue value="vaccinatiecertificaat">
-            Vaccinatiecertificaat
-          </option>
+          <option value="vaccinatiecertificaat">Vaccinatiecertificaat</option>
           <option value="testcertificaat"> Testcertificaat </option>
           <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
 
         <select onChange={handleGroup} required name="groep" id="groep">
-          <option defaultValue value="wheelhouse">
-            Wheelhouse
-          </option>
+          <option value="wheelhouse">Wheelhouse</option>
           <option value="konsolidate"> Konsolidate </option>
           <option value="craftworkz">Craftworkz </option>
         </select>

@@ -14,7 +14,7 @@ const CovidInformation = ({
   endDate: string | undefined | any;
   dosis: string | undefined;
   group: string | undefined;
-}): React.FC => {
+}): React.ReactElement => {
   return (
     <>
       <p>Data that got fetched: </p>

@@ -1,6 +1,6 @@
 import { SessionProvider } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
-import React, { FC } from 'react';
+import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ROUTES } from 'src/consts';
 
@@ -10,11 +10,11 @@ import Dashboard from '../dashboard';
 
 import Nav from '../nav';
 
-const Container = (): FC => {
+const Container = (): React.ReactElement => {
   const { uiStore } = useStores();
 
   return useObserver(() => (
-    <SessionProvider children>
+    <SessionProvider>
       <Nav />
       <Switch>
         <Route exact path={ROUTES.dashboard}>
