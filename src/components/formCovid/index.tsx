@@ -20,19 +20,19 @@ const FormCovid = (): React.ReactElement => {
   const [group, setGroup] = React.useState('wheelhouse');
   const { solidStore } = useStores();
 
-  const handleDate = (e: any): void => {
+  const handleDateChange = (e: any): void => {
     setDate(e.target.value);
   };
 
-  const handleGroup = (e: any): void => {
+  const handleGroupChange = (e: any): void => {
     setGroup(e.target.value);
   };
 
-  const handleCertificaat = (e: any): void => {
+  const handleCertificaatChange = (e: any): void => {
     setCertificaat(e.target.value);
   };
 
-  const handleFiles = async (e: any): Promise<void> => {
+  const handleFilesChange = async (e: any): Promise<void> => {
     const targetFile = e.target.files[0];
     setFile(targetFile);
 
@@ -59,8 +59,6 @@ const FormCovid = (): React.ReactElement => {
                 setDate(date);
                 setId(certificateIdentifier);
               }
-            } else {
-              return;
             }
           });
         });
@@ -101,17 +99,18 @@ const FormCovid = (): React.ReactElement => {
         className="grid content-center justify-center gap-7 mb-7 "
       >
         <select
-          onChange={handleCertificaat}
+          onChange={handleCertificaatChange}
           required
           name="certificaten"
           id="certificaten"
+          value={certificaat}
         >
           <option value="vaccinatiecertificaat">Vaccinatiecertificaat</option>
           <option value="testcertificaat"> Testcertificaat </option>
           <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
 
-        <select onChange={handleGroup} required name="groep" id="groep">
+        <select onChange={handleGroupChange} required name="groep" id="groep">
           <option value="wheelhouse">Wheelhouse</option>
           <option value="konsolidate"> Konsolidate </option>
           <option value="craftworkz">Craftworkz </option>
@@ -119,7 +118,7 @@ const FormCovid = (): React.ReactElement => {
         {certificaat === 'testcertificaat' ||
         certificaat === 'herstelcertificaat' ? (
           <input
-            onChange={handleDate}
+            onChange={handleDateChange}
             min="2020-12-12"
             required
             type="date"
@@ -129,7 +128,7 @@ const FormCovid = (): React.ReactElement => {
           <input
             type="file"
             accept="application/pdf"
-            onChange={handleFiles}
+            onChange={handleFilesChange}
             id="covidfile"
             name="covidfile"
           />
