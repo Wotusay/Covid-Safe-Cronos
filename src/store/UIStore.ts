@@ -18,7 +18,7 @@ class UIStore {
     this.covidInformation = undefined;
   }
 
-  checkUploadedFiles = async (session: any): Promise<any> => {
+  checkUploadedFiles = async (session: any): Promise<void> => {
     const { webId } = session.info;
     const splitLink = webId.split('/');
     const cronosURL = `https://${splitLink[2]}/cronos/covid/covid__info`;
@@ -35,6 +35,7 @@ class UIStore {
       dosis: covidInfoObject.dosis,
       typeCovidCerticate: covidInfoObject.typeCovidCerticate,
     });
+
     console.info(this.covidInformation);
   };
 }

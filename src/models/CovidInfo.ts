@@ -12,10 +12,10 @@ class CovidInfo {
     dosis,
     typeCovidCerticate,
   }: {
-    id: string;
+    id: string | undefined;
     startDate: string;
     endDate: string;
-    dosis: number;
+    dosis: number | undefined;
     typeCovidCerticate: string;
   }) {
     if (id) {

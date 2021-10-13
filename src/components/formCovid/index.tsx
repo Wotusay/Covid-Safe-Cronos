@@ -4,6 +4,9 @@ import { useObserver } from 'mobx-react-lite';
 import pdfjs from 'pdfjs-dist';
 import React, { useState } from 'react';
 
+import { useHistory } from 'react-router-dom';
+import { ROUTES } from 'src/consts';
+
 import { useStores } from '../../contexts/index';
 import CovidInformation from '../covidInformation';
 
@@ -18,7 +21,8 @@ const FormCovid = (): React.ReactElement => {
   const [dosis, setDosis] = useState('');
   const [id, setId] = useState('');
   const [group, setGroup] = React.useState('wheelhouse');
-  const { solidStore } = useStores();
+  const { solidStore, uiStore } = useStores();
+  const history: any[] = useHistory();
 
   const handleDateChange = (e: any): void => {
     setDate(e.target.value);
@@ -66,7 +70,7 @@ const FormCovid = (): React.ReactElement => {
     }
   };
 
-  const handleSubmit = async (e): Promise<void> => {
+  const handleSubmit = async (e): Promise<any> => {
     e.preventDefault();
     solidStore.status = id === '' ? 'loading data' : '';
     if (id !== '' && certificaat === 'vaccinatiecertificaat') {
@@ -78,12 +82,15 @@ const FormCovid = (): React.ReactElement => {
         id,
         group,
       );
+      await uiStore.checkUploadedFiles(session);
+      if (file) {
+        await solidStore.handleFiles(file, session);
+      }
+      return history.push(ROUTES.dashboard);
     } else {
       await solidStore.createCovidFile(date, certificaat, session);
-    }
-
-    if (file) {
-      await solidStore.handleFiles(file, session);
+      await uiStore.checkUploadedFiles(session);
+      return history.push(ROUTES.dashboard);
     }
   };
   return useObserver(() => (
@@ -126,6 +133,7 @@ const FormCovid = (): React.ReactElement => {
           />
         ) : (
           <input
+            required
             type="file"
             accept="application/pdf"
             onChange={handleFilesChange}
