@@ -8,6 +8,7 @@ import { useStores } from '../../contexts/index';
 import Content from '../content';
 import Dashboard from '../dashboard';
 
+import EditProfile from '../EditProfile/index';
 import Nav from '../nav';
 
 const Container = (): React.ReactElement => {
@@ -20,6 +21,13 @@ const Container = (): React.ReactElement => {
         <Route exact path={ROUTES.dashboard}>
           {uiStore.covidInformation ? (
             <Dashboard />
+          ) : (
+            <Redirect to={ROUTES.home} />
+          )}
+        </Route>
+        <Route exact path={ROUTES.edit}>
+          {uiStore.covidInformation ? (
+            <EditProfile />
           ) : (
             <Redirect to={ROUTES.home} />
           )}

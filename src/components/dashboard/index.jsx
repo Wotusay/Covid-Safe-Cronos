@@ -4,6 +4,9 @@ import { Text, CombinedDataProvider, useSession } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+import { ROUTES } from 'src/consts';
+
 import { useStores } from '../../contexts/index';
 import CovidInformation from '../covidInformation/index';
 
@@ -26,6 +29,7 @@ const Dashboard = () => {
           dosis={uiStore.covidInformation.dosis}
           endDate={uiStore.covidInformation.endDate}
         />
+        <Link to={ROUTES.edit}>Edit your covid information</Link>
       </div>
     </CombinedDataProvider>
   ));
