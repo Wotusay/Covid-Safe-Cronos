@@ -9,7 +9,7 @@ const CovidInformation = ({
   endDate,
 }: {
   certificaat: string;
-  id: string;
+  id: string | undefined;
   date: string;
   endDate: string | undefined | any;
   dosis: string | undefined;

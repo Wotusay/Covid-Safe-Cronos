@@ -28,15 +28,15 @@ class UIStore {
       cronosURL,
     );
 
-    this.covidInformation = new CovidInfo({
-      id: covidInfoObject.id,
-      startDate: dayjs(covidInfoObject.startDate).format('YYYY-MM-DD'),
-      endDate: dayjs(covidInfoObject.endDate).format('YYYY-MM-DD'),
-      dosis: covidInfoObject.dosis,
-      typeCovidCerticate: covidInfoObject.typeCovidCerticate,
-    });
-
-    console.info(this.covidInformation);
+    if (covidInfoObject) {
+      this.covidInformation = new CovidInfo({
+        id: covidInfoObject.id,
+        startDate: dayjs(covidInfoObject.startDate).format('YYYY-MM-DD'),
+        endDate: dayjs(covidInfoObject.endDate).format('YYYY-MM-DD'),
+        dosis: covidInfoObject.dosis,
+        typeCovidCerticate: covidInfoObject.typeCovidCerticate,
+      });
+    }
   };
 }
 
