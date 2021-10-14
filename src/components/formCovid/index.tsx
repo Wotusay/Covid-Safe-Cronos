@@ -20,9 +20,9 @@ const FormCovid = (): React.ReactElement => {
   const [date, setDate] = useState('');
   const [dosis, setDosis] = useState('');
   const [id, setId] = useState('');
-  const [group, setGroup] = React.useState('wheelhouse');
+  const [group, setGroup] = useState('wheelhouse');
   const { solidStore, uiStore } = useStores();
-  const history: any[] = useHistory();
+  const history = useHistory();
 
   const handleDateChange = (e: any): void => {
     setDate(e.target.value);
@@ -117,7 +117,13 @@ const FormCovid = (): React.ReactElement => {
           <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
 
-        <select onChange={handleGroupChange} required name="groep" id="groep">
+        <select
+          onChange={handleGroupChange}
+          value={group}
+          required
+          name="groep"
+          id="groep"
+        >
           <option value="wheelhouse">Wheelhouse</option>
           <option value="konsolidate"> Konsolidate </option>
           <option value="craftworkz">Craftworkz </option>
@@ -148,7 +154,6 @@ const FormCovid = (): React.ReactElement => {
             id={id}
             dosis={dosis}
             group={group}
-            endDate={undefined}
           />
         ) : null}
         <input
