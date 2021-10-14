@@ -16,22 +16,33 @@ const Dashboard = () => {
   const webId = session.info.webId;
   // TS werkt hier niet
   return useObserver(() => (
-    <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
-      <div className="grid content-center justify-center gap-7 mb-7 ">
-        <p className="flex content-center justify-center gap-1 mt-10 text-2xl font-bold mb-7">
-          Covid gegevens van {<Text property={FOAF.name.iri.value} />}
-        </p>
+    <div className="flex items-center justify-center w-screen mt-52">
+      <div className="grid justify-center w-3/12 p-6 shadow-xl rounded-xl bg-blueAccent">
+        <div className="grid p-10 rounded-md shadow-xl bg-whiteAccent">
+          <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
+            <div className="grid content-center justify-center">
+              <p className="text-2xl font-medium text-navyBlue">
+                Covid gegevens van {<Text property={FOAF.name.iri.value} />}
+              </p>
 
-        <CovidInformation
-          certificaat={uiStore.covidInformation.typeCovidCerticate}
-          date={uiStore.covidInformation.startDate}
-          id={uiStore.covidInformation.id}
-          dosis={uiStore.covidInformation.dosis}
-          endDate={uiStore.covidInformation.endDate}
-        />
-        <Link to={ROUTES.edit}>Edit your covid information</Link>
+              <CovidInformation
+                certificaat={uiStore.covidInformation.typeCovidCerticate}
+                date={uiStore.covidInformation.startDate}
+                id={uiStore.covidInformation.id}
+                dosis={uiStore.covidInformation.dosis}
+                endDate={uiStore.covidInformation.endDate}
+              />
+              <Link
+                className="p-5 font-medium text-center shadow-lg bg-oceanBlue text-whiteAccent rounded-3xl"
+                to={ROUTES.edit}
+              >
+                Edit your information
+              </Link>
+            </div>
+          </CombinedDataProvider>
+        </div>
       </div>
-    </CombinedDataProvider>
+    </div>
   ));
 };
 

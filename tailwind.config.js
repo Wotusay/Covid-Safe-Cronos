@@ -1,7 +1,6 @@
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  mode: 'jit',
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -32,15 +31,13 @@ module.exports = {
       red: colors.rose,
       yellow: colors.amber,
       green: colors.green,
-      whiteAccent: {
-        default: '#FAFAFA',
-      },
-      navyBlue: {
-        default: '#13132B',
-      },
-      oceanBlue: {
-        default: '#023AFF',
-      },
+      whiteAccent: '#FAFAFA',
+      navyBlue: '#383874',
+      oceanBlue: '#023AFF',
+      blueAccent: '#EEF1FA',
+      salamonPink: '#ED4949',
+      appelGreen: '#20B741',
+      textColor: '#A7A8E3',
     },
   },
   variants: {

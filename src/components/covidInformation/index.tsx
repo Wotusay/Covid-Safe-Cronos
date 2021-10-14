@@ -16,18 +16,37 @@ const CovidInformation = ({
   group?: string | undefined;
 }): React.ReactElement => {
   return (
-    <>
-      <p>Data that got fetched: </p>
+    <div className="mb-12">
+      <p className="mb-6 text-sm font-normal text-textColor">
+        Data that got fetched
+      </p>
       <ul>
-        {group ? <li> Workplace: {group} </li> : null}
-        <li> Type of certificate: {certificaat} </li>
-        <li>
-          Date: {date} {endDate ? `- ${endDate}` : null}
+        {group ? (
+          <li className="text-md text-navyBlue">
+            <span className="mr-2 text-textColor"> Workplace: </span> {group}
+          </li>
+        ) : null}
+        <li className="text-md text-navyBlue">
+          <span className="mr-2 text-textColor">Type of certificate: </span>
+          {certificaat}
         </li>
-        {id ? <li> Certificate identifier: {id} </li> : null}
-        {dosis ? <li> Dosises: {dosis} </li> : null}
+        <li className="text-md text-navyBlue">
+          <span className="mr-2 text-textColor">Date: </span> {date}
+          {endDate ? `- ${endDate}` : null}
+        </li>
+        {id ? (
+          <li className="text-md text-navyBlue">
+            <span className="mr-2 text-textColor">Identifier:</span>
+            {id}
+          </li>
+        ) : null}
+        {dosis ? (
+          <li className="text-md text-navyBlue">
+            <span className="mr-2 text-textColor">Dosises:</span> {dosis}
+          </li>
+        ) : null}
       </ul>
-    </>
+    </div>
   );
 };
 
