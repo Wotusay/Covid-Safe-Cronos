@@ -1,11 +1,11 @@
 import { useSession, LogoutButton } from '@inrupt/solid-ui-react';
-import React, { FC } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { ROUTES } from 'src/consts';
 
 import LoginForm from '../LoginForm';
 
-const Nav = (): FC => {
+const Nav = (): React.ReactElement => {
   const { session, sessionRequestInProgress } = useSession();
 
   return (
@@ -16,7 +16,7 @@ const Nav = (): FC => {
             onError={console.error}
             onLogout={() => window.location.reload()}
           >
-            <p className="font-semibold float-right p-5 text-white bg-red-600 rounded-sm">
+            <p className="float-right p-5 font-semibold text-white bg-red-600 rounded-sm">
               Logout
             </p>
           </LogoutButton>
@@ -24,8 +24,8 @@ const Nav = (): FC => {
 
         {!sessionRequestInProgress && !session.info.isLoggedIn && <LoginForm />}
       </div>
-      <div className="font-semibold text-xl p-7">
-        <NavLink className="font-semibold text-xl " to={ROUTES.home}>
+      <div className="text-xl font-semibold p-7">
+        <NavLink className="text-xl font-semibold " to={ROUTES.home}>
           Cronos Covidcertifcaten
         </NavLink>
       </div>

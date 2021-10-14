@@ -5,14 +5,15 @@ import { action, decorate, observable } from 'mobx';
 import FirebaseService from '../services/FirebaseService';
 import SolidService from '../services/SolidService';
 
+import RootStore from './index';
 class SolidStore {
-  rootStore: any;
+  rootStore: RootStore;
   solidService: any;
   status: string;
   ttlStatus: boolean;
-  firebaseService: any;
+  firebaseService: FirebaseService;
 
-  constructor(rootStore: any) {
+  constructor(rootStore: RootStore) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.rootStore = rootStore;
     this.solidService = new SolidService();

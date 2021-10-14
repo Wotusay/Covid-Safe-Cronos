@@ -1,10 +1,12 @@
 import * as firebase from 'firebase/app';
 
 import SolidStore from './SolidStore';
+import UIStore from './UIStore';
 
 class RootStore {
-  solidStore: any;
+  solidStore: SolidStore;
   firebase: any;
+  uiStore: UIStore;
 
   constructor() {
     const firebaseConfig = {
@@ -19,6 +21,7 @@ class RootStore {
     this.firebase = firebase.initializeApp(firebaseConfig);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.solidStore = new SolidStore(this);
+    this.uiStore = new UIStore(this);
   }
 }
 

@@ -1,7 +1,7 @@
 const ROUTES = {
   home: '/',
-  manager: '/manager',
-  worker: '/worker',
+  dashboard: '/dashboard',
+  edit: '/edit',
 };
 
 export { ROUTES };

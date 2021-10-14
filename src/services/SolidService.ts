@@ -12,6 +12,8 @@ import {
   saveFileInContainer,
   addStringNoLocale,
   addInteger,
+  getDate,
+  getInteger,
 } from '@inrupt/solid-client';
 
 import { SCHEMA_INRUPT, RDF } from '@inrupt/vocab-common-rdf';
@@ -24,6 +26,46 @@ class SolidService {
     this.status = '';
     this.doneCreatingFiles = false;
   }
+
+  getSolidDataCovid = async (session: any, url: string): Promise<any> => {
+    try {
+      const itemObject: any = {};
+      const myCovidFile = await getSolidDataset(url, {
+        fetch: session.fetch,
+      });
+      const covidInfo = await getThingAll(myCovidFile);
+      covidInfo.forEach(item => {
+        const linkSplit = item.url.split('#');
+        const name = linkSplit[1];
+        const startDate = getDate(item, SCHEMA_INRUPT.startDate);
+        const endDate = getDate(item, SCHEMA_INRUPT.endDate);
+        const id = getStringNoLocale(item, SCHEMA_INRUPT.identifier);
+        const dosis = getInteger(item, SCHEMA_INRUPT.identifier);
+        const typeCovidCerticate =
+          name === 'HC1.v'
+            ? 'vaccinatiecertificaat'
+            : name === 'HC1.t'
+            ? 'testcertificaat'
+            : 'herstelcertificaat';
+
+        if (startDate !== null) {
+          itemObject.startDate = startDate;
+        } else if (endDate !== null) {
+          itemObject.endDate = endDate;
+        } else if (id !== null) {
+          itemObject.id = id;
+        } else if (dosis !== null) {
+          itemObject.dosis = dosis;
+        } else {
+          itemObject.typeCovidCerticate = typeCovidCerticate;
+        }
+      });
+
+      return itemObject;
+    } catch (error) {
+      console.info(error);
+    }
+  };
 
   uploadFile = async (
     file: any,

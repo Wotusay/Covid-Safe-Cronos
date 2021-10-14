@@ -2,14 +2,11 @@ import { useSession, CombinedDataProvider } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
 import React from 'react';
 
-import { useStores } from '../../contexts/index';
 import FormCovid from '../formCovid';
 
-const Profile = () => {
+const EditProfile = () => {
   const { session } = useSession();
   const { webId } = session.info;
-  const { uiStore } = useStores();
-  uiStore.checkUploadedFiles(session);
 
   return useObserver(() => (
     <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
@@ -20,4 +17,4 @@ const Profile = () => {
   ));
 };
 
-export default Profile;
+export default EditProfile;

@@ -2,7 +2,10 @@ import { FOAF } from '@inrupt/lit-generated-vocab-common';
 import { Text, useSession } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
 import pdfjs from 'pdfjs-dist';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
+
+import { useHistory } from 'react-router-dom';
+import { ROUTES } from 'src/consts';
 
 import { useStores } from '../../contexts/index';
 import CovidInformation from '../covidInformation';
@@ -10,15 +13,16 @@ import CovidInformation from '../covidInformation';
 pdfjs.GlobalWorkerOptions.workerSrc =
   'https://cdn.bootcss.com/pdf.js/2.4.456/pdf.worker.js';
 
-const FormCovid = (): FC => {
+const FormCovid = (): React.ReactElement => {
   const { session } = useSession();
   const [certificaat, setCertificaat] = useState('vaccinatiecertificaat');
   const [file, setFile] = useState();
-  const [date, setDate] = useState<string>('');
-  const [dosis, setDosis] = useState<string>('');
-  const [id, setId] = useState<string>('');
-  const [group, setGroup] = useState<string>('wheelhouse');
-  const { solidStore } = useStores();
+  const [date, setDate] = useState('');
+  const [dosis, setDosis] = useState('');
+  const [id, setId] = useState('');
+  const [group, setGroup] = useState('wheelhouse');
+  const { solidStore, uiStore } = useStores();
+  const history = useHistory();
 
   const handleDateChange = (e: any): void => {
     setDate(e.target.value);
@@ -66,7 +70,7 @@ const FormCovid = (): FC => {
     }
   };
 
-  const handleSubmit = async (e): Promise<void> => {
+  const handleSubmit = async (e): Promise<any> => {
     e.preventDefault();
     solidStore.status = id === '' ? 'loading data' : '';
     if (id !== '' && certificaat === 'vaccinatiecertificaat') {
@@ -78,18 +82,21 @@ const FormCovid = (): FC => {
         id,
         group,
       );
+      await uiStore.checkUploadedFiles(session);
+      if (file) {
+        await solidStore.handleFiles(file, session);
+      }
+      return history.push(ROUTES.dashboard);
     } else {
       await solidStore.createCovidFile(date, certificaat, session);
-    }
-
-    if (file) {
-      await solidStore.handleFiles(file, session);
+      await uiStore.checkUploadedFiles(session);
+      return history.push(ROUTES.dashboard);
     }
   };
   return useObserver(() => (
     <>
       <p className="flex content-center justify-center gap-1 mt-10 text-2xl font-bold mb-7">
-        Covid gegevens van {<Text property={FOAF.name.iri.value} />}
+        Vul je covid gegevens aan van {<Text property={FOAF.name.iri.value} />}
       </p>
       <p className="flex content-center justify-center gap-1 font-medium text-green-700 mb-7">
         {solidStore.status}
@@ -105,9 +112,7 @@ const FormCovid = (): FC => {
           id="certificaten"
           value={certificaat}
         >
-          <option defaultValue value="vaccinatiecertificaat">
-            Vaccinatiecertificaat
-          </option>
+          <option value="vaccinatiecertificaat">Vaccinatiecertificaat</option>
           <option value="testcertificaat"> Testcertificaat </option>
           <option value="herstelcertificaat">Herstelcertificaat </option>
         </select>
@@ -119,9 +124,7 @@ const FormCovid = (): FC => {
           name="groep"
           id="groep"
         >
-          <option defaultValue value="wheelhouse">
-            Wheelhouse
-          </option>
+          <option value="wheelhouse">Wheelhouse</option>
           <option value="konsolidate"> Konsolidate </option>
           <option value="craftworkz">Craftworkz </option>
         </select>
@@ -136,6 +139,7 @@ const FormCovid = (): FC => {
           />
         ) : (
           <input
+            required
             type="file"
             accept="application/pdf"
             onChange={handleFilesChange}
