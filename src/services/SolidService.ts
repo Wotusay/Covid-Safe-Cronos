@@ -48,18 +48,19 @@ class SolidService {
             ? 'testcertificaat'
             : 'herstelcertificaat';
 
-        const itemAdder = () =>
-          startDate !== null
-            ? (itemObject.startDate = startDate)
-            : endDate !== null
-            ? (itemObject.endDate = endDate)
-            : id !== null
-            ? (itemObject.id = id)
-            : dosis !== null
-            ? (itemObject.dosis = dosis)
-            : (itemObject.typeCovidCerticate = typeCovidCerticate);
-        itemAdder();
+        if (startDate !== null) {
+          itemObject.startDate = startDate;
+        } else if (endDate !== null) {
+          itemObject.endDate = endDate;
+        } else if (id !== null) {
+          itemObject.id = id;
+        } else if (dosis !== null) {
+          itemObject.dosis = dosis;
+        } else {
+          itemObject.typeCovidCerticate = typeCovidCerticate;
+        }
       });
+
       return itemObject;
     } catch (error) {
       console.info(error);
