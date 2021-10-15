@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ListItem from '../ListItem';
+
 const CovidInformation = ({
   certificaat,
   id,
@@ -16,18 +18,18 @@ const CovidInformation = ({
   group?: string | undefined;
 }): React.ReactElement => {
   return (
-    <>
-      <p>Data that got fetched: </p>
+    <div className="mb-12">
+      <p className="mb-6 text-sm font-normal text-textColor">
+        Data that got fetched
+      </p>
       <ul>
-        {group ? <li> Workplace: {group} </li> : null}
-        <li> Type of certificate: {certificaat} </li>
-        <li>
-          Date: {date} {endDate ? `- ${endDate}` : null}
-        </li>
-        {id ? <li> Certificate identifier: {id} </li> : null}
-        {dosis ? <li> Dosises: {dosis} </li> : null}
+        {group ? <ListItem title="Workplace" item={group} /> : null}
+        <ListItem title="Type of certificate" item={certificaat} />
+        <ListItem title="Date" item={date} secondItem={endDate} />
+        {id ? <ListItem title="Identifier" item={id} /> : null}
+        {dosis ? <ListItem title="Dosises" item={dosis} /> : null}
       </ul>
-    </>
+    </div>
   );
 };
 

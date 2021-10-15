@@ -10,7 +10,7 @@ const LoginForm = (): React.ReactElement => {
       redirectUrl={window.location.href}
       onError={console.error}
     >
-      <p className="float-right p-5 font-semibold text-white bg-green-700 rounded-sm">
+      <p className="p-3 font-medium text-center text-white shadow-xl w-28 bg-appelGreen rounded-3xl">
         Login
       </p>
     </LoginButton>
