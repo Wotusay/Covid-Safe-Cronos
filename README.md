@@ -26,7 +26,7 @@ For this section you will have to create an .env file and setup a database at [F
     REACT_APP_messagingSenderId= "messagingSenderId"
     REACT_APP_appId= "appId"
 
-These items you can find at your project settings. The database url will not be under project settings but on the Realtime Database the first link you see.
+These items you can find at your project settings. The database url will not be under project settings but on the Realtime Database the first link you see. This can be the same database as the one you made for Manager app. [Manager repo](https://github.com/Wotusay/manager-app)
 
 There are some rules you can set for your database but these are optional if you just want to test the project out. You can edit these at the rules tab in your Realtime database.
 
