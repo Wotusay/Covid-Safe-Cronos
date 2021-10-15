@@ -9,6 +9,7 @@ import { ROUTES } from 'src/consts';
 
 import { useStores } from '../../contexts/index';
 import CovidInformation from '../covidInformation';
+import SelectInput from '../Select';
 
 pdfjs.GlobalWorkerOptions.workerSrc =
   'https://cdn.bootcss.com/pdf.js/2.4.456/pdf.worker.js';
@@ -109,33 +110,24 @@ const FormCovid = (): React.ReactElement => {
             onSubmit={handleSubmit}
             className="grid content-center justify-center gap-7 mb-7 "
           >
-            <select
-              className="pl-2 pr-2 border border-textColor rounded-xl bg-whiteAccent text-navyBlue"
-              onChange={handleCertificaatChange}
-              required
+            <SelectInput
+              item={certificaat}
+              handleChange={handleCertificaatChange}
               name="certificaten"
-              id="certificaten"
-              value={certificaat}
-            >
-              <option value="vaccinatiecertificaat">
-                Vaccinatiecertificaat
-              </option>
-              <option value="testcertificaat"> Testcertificaat </option>
-              <option value="herstelcertificaat">Herstelcertificaat </option>
-            </select>
+              options={[
+                'vaccinatiecertificaat',
+                'testcertificaat',
+                'herstelcertificaat',
+              ]}
+            />
 
-            <select
-              className="pl-2 pr-2 border border-textColor rounded-xl bg-whiteAccent text-navyBlue"
-              onChange={handleGroupChange}
-              value={group}
-              required
+            <SelectInput
+              item={group}
+              handleChange={handleGroupChange}
               name="groep"
-              id="groep"
-            >
-              <option value="wheelhouse">Wheelhouse</option>
-              <option value="konsolidate"> Konsolidate </option>
-              <option value="craftworkz">Craftworkz </option>
-            </select>
+              options={['wheelhouse', 'konsolidate', 'craftworkz']}
+            />
+
             {certificaat === 'testcertificaat' ||
             certificaat === 'herstelcertificaat' ? (
               <input

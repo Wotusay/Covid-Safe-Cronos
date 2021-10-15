@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ListItem from '../ListItem';
+
 const CovidInformation = ({
   certificaat,
   id,
@@ -21,30 +23,11 @@ const CovidInformation = ({
         Data that got fetched
       </p>
       <ul>
-        {group ? (
-          <li className="text-md text-navyBlue">
-            <span className="mr-2 text-textColor"> Workplace: </span> {group}
-          </li>
-        ) : null}
-        <li className="text-md text-navyBlue">
-          <span className="mr-2 text-textColor">Type of certificate: </span>
-          {certificaat}
-        </li>
-        <li className="text-md text-navyBlue">
-          <span className="mr-2 text-textColor">Date: </span> {date}
-          {endDate ? `- ${endDate}` : null}
-        </li>
-        {id ? (
-          <li className="text-md text-navyBlue">
-            <span className="mr-2 text-textColor">Identifier:</span>
-            {id}
-          </li>
-        ) : null}
-        {dosis ? (
-          <li className="text-md text-navyBlue">
-            <span className="mr-2 text-textColor">Dosises:</span> {dosis}
-          </li>
-        ) : null}
+        {group ? <ListItem title="Workplace" item={group} /> : null}
+        <ListItem title="Type of certificate" item={certificaat} />
+        <ListItem title="Date" item={date} secondItem={endDate} />
+        {id ? <ListItem title="Identifier" item={id} /> : null}
+        {dosis ? <ListItem title="Dosises" item={dosis} /> : null}
       </ul>
     </div>
   );
