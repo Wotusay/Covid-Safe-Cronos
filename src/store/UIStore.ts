@@ -1,0 +1,48 @@
+import dayjs from 'dayjs';
+import { decorate, observable } from 'mobx';
+
+import CovidInfo from '../models/CovidInfo';
+import SolidService from '../services/SolidService';
+
+import RootStore from './index';
+class UIStore {
+  rootStore: RootStore;
+  solidService: SolidService;
+  solidItems: Array<any>;
+  covidInformation: CovidInfo | undefined;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    this.solidService = new SolidService();
+    this.solidItems = [];
+    this.covidInformation = undefined;
+  }
+
+  checkUploadedFiles = async (session: any): Promise<void> => {
+    const { webId } = session.info;
+    const splitLink = webId.split('/');
+    const cronosURL = `https://${splitLink[2]}/cronos/covid/covid__info`;
+
+    const covidInfoObject = await this.solidService.getSolidDataCovid(
+      session,
+      cronosURL,
+    );
+
+    if (covidInfoObject) {
+      this.covidInformation = new CovidInfo({
+        id: covidInfoObject.id,
+        startDate: dayjs(covidInfoObject.startDate).format('YYYY-MM-DD'),
+        endDate: dayjs(covidInfoObject.endDate).format('YYYY-MM-DD'),
+        dosis: covidInfoObject.dosis,
+        typeCovidCerticate: covidInfoObject.typeCovidCerticate,
+      });
+    }
+  };
+}
+
+decorate(UIStore, {
+  solidItems: observable,
+  covidInformation: observable,
+});
+
+export default UIStore;

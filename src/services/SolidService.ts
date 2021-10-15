@@ -10,6 +10,10 @@ import {
   removeThing,
   addDate,
   saveFileInContainer,
+  addStringNoLocale,
+  addInteger,
+  getDate,
+  getInteger,
 } from '@inrupt/solid-client';
 
 import { SCHEMA_INRUPT, RDF } from '@inrupt/vocab-common-rdf';
@@ -22,6 +26,46 @@ class SolidService {
     this.status = '';
     this.doneCreatingFiles = false;
   }
+
+  getSolidDataCovid = async (session: any, url: string): Promise<any> => {
+    try {
+      const itemObject: any = {};
+      const myCovidFile = await getSolidDataset(url, {
+        fetch: session.fetch,
+      });
+      const covidInfo = await getThingAll(myCovidFile);
+      covidInfo.forEach(item => {
+        const linkSplit = item.url.split('#');
+        const name = linkSplit[1];
+        const startDate = getDate(item, SCHEMA_INRUPT.startDate);
+        const endDate = getDate(item, SCHEMA_INRUPT.endDate);
+        const id = getStringNoLocale(item, SCHEMA_INRUPT.identifier);
+        const dosis = getInteger(item, SCHEMA_INRUPT.identifier);
+        const typeCovidCerticate =
+          name === 'HC1.v'
+            ? 'vaccinatiecertificaat'
+            : name === 'HC1.t'
+            ? 'testcertificaat'
+            : 'herstelcertificaat';
+
+        if (startDate !== null) {
+          itemObject.startDate = startDate;
+        } else if (endDate !== null) {
+          itemObject.endDate = endDate;
+        } else if (id !== null) {
+          itemObject.id = id;
+        } else if (dosis !== null) {
+          itemObject.dosis = dosis;
+        } else {
+          itemObject.typeCovidCerticate = typeCovidCerticate;
+        }
+      });
+
+      return itemObject;
+    } catch (error) {
+      console.info(error);
+    }
+  };
 
   uploadFile = async (
     file: any,
@@ -50,12 +94,15 @@ class SolidService {
     date: string,
     certificaat: string,
     validationDate: string,
+    dosis: string,
+    id: string,
   ): Promise<any> => {
     const fetchSessionData = session.fetch;
     let myCovidFile: any;
 
     const dateObj = new Date(date);
     const validationObj = new Date(validationDate);
+    const dosisInt = dosis === '2/2' ? 2 : dosis === '1/2' ? 1 : undefined;
 
     try {
       myCovidFile = await getSolidDataset(cronosURL, {
@@ -76,6 +123,8 @@ class SolidService {
     let covidTypeThing;
     let dateThing;
     let dateUntilThing;
+    let idThing;
+    let dosisThing;
     switch (certificaat) {
       case 'vaccinatiecertificaat':
         covidTypeThing = createThing({ name: `HC1.v` });
@@ -95,6 +144,17 @@ class SolidService {
           validationObj,
         );
 
+        if (id !== '' && dosisInt) {
+          idThing = createThing({ name: `HC1.v.id` });
+          idThing = addStringNoLocale(idThing, SCHEMA_INRUPT.identifier, id);
+
+          dosisThing = createThing({ name: `HC1.v.sd` });
+          dosisThing = addInteger(
+            dosisThing,
+            SCHEMA_INRUPT.identifier,
+            dosisInt,
+          );
+        }
         break;
       case 'herstelcertificaat':
         covidTypeThing = createThing({ name: `HC1.r` });
@@ -136,7 +196,18 @@ class SolidService {
         break;
     }
 
-    const dataItems = [covidTypeThing, dateThing, dateUntilThing];
+    let dataItems;
+    if (idThing) {
+      dataItems = [
+        covidTypeThing,
+        dateThing,
+        dateUntilThing,
+        idThing,
+        dosisThing,
+      ];
+    } else {
+      dataItems = [covidTypeThing, dateThing, dateUntilThing];
+    }
 
     dataItems.forEach(dataItem => {
       myCovidFile = setThing(myCovidFile, dataItem);
