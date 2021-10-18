@@ -30,6 +30,7 @@ const FormCovid = (): React.ReactElement => {
   };
 
   const handleGroupChange = (e: any): void => {
+    console.info(e.target.value);
     setGroup(e.target.value);
   };
 
@@ -75,21 +76,21 @@ const FormCovid = (): React.ReactElement => {
     e.preventDefault();
     solidStore.status = id === '' ? 'loading data' : '';
     if (id !== '' && certificaat === 'vaccinatiecertificaat') {
-      await solidStore.createCovidFile(
+      await solidStore.createCovidFile({
         date,
         certificaat,
         session,
         dosis,
         id,
         group,
-      );
+      });
       await uiStore.checkUploadedFiles(session);
       if (file) {
         await solidStore.handleFiles(file, session);
       }
       return history.push(ROUTES.dashboard);
     } else {
-      await solidStore.createCovidFile(date, certificaat, session);
+      await solidStore.createCovidFile({ date, certificaat, session, group });
       await uiStore.checkUploadedFiles(session);
       solidStore.status = '';
       return history.push(ROUTES.dashboard);

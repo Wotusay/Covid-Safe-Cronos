@@ -6,17 +6,22 @@ class FirebaseService {
     this.db = getDatabase(firebase);
   }
 
-  writeUserData = async (
-    username: string,
-    date: string,
-    validate: string,
-    group: string,
-  ): Promise<any> => {
+  writeUserData = async ({
+    username,
+    date,
+    validationDate,
+    group,
+  }: {
+    username: string;
+    date: string;
+    validationDate: string;
+    group: string;
+  }): Promise<any> => {
     try {
       await set(ref(this.db, `covid-items/${group}/${username}`), {
         username,
         date,
-        validate,
+        validationDate,
       });
     } catch (error) {
       console.info(error);
