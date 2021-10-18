@@ -29,15 +29,21 @@ class SolidStore {
     await this.solidService.uploadFile(file, fileLink, session);
   };
 
-  createCovidFile = async (
-    date: string,
-    certificaat: string,
-    session: any,
-    dosis: string,
-    id: string,
-    group: string,
-  ): Promise<void> => {
-    console.log(session.info);
+  createCovidFile = async ({
+    date,
+    certificaat,
+    session,
+    dosis,
+    id,
+    group,
+  }: {
+    date: string;
+    certificaat: string;
+    session: any;
+    dosis?: string;
+    id?: string;
+    group: string;
+  }): Promise<void> => {
     const { webId } = session.info;
     const spiltLink = webId.split('/');
     const spiltDot = spiltLink[2].split('.');
@@ -65,12 +71,13 @@ class SolidStore {
           validationDate,
         );
       }
-      await this.firebaseService.writeUserData(
+      await this.firebaseService.writeUserData({
         username,
         date,
         validationDate,
         group,
-      );
+      });
+
       this.status = this.solidService.status;
     } else {
       this.status = 'Something went wrong with saving the data';
