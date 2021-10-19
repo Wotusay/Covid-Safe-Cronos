@@ -17,8 +17,16 @@ class FirebaseService {
     validationDate: string;
     group: string;
   }): Promise<any> => {
+    const userPath = username;
+    if (username === 'testinguser22') {
+      username = 'Wout S.';
+    } else if (username === 'testinguser400') {
+      username = 'Daren M.';
+    } else {
+      username = 'Test user';
+    }
     try {
-      await set(ref(this.db, `covid-items/${group}/${username}`), {
+      await set(ref(this.db, `covid-items/${group}/${userPath}`), {
         username,
         date,
         validationDate,

@@ -1,5 +1,4 @@
-import { FOAF } from '@inrupt/lit-generated-vocab-common';
-import { Text, CombinedDataProvider, useSession } from '@inrupt/solid-ui-react';
+import { CombinedDataProvider, useSession } from '@inrupt/solid-ui-react';
 
 import { useObserver } from 'mobx-react-lite';
 import React from 'react';
@@ -22,7 +21,7 @@ const Dashboard = () => {
           <CombinedDataProvider datasetUrl={webId} thingUrl={webId}>
             <div className="grid content-center justify-center">
               <p className="text-2xl font-medium text-navyBlue">
-                Covid gegevens van {<Text property={FOAF.name.iri.value} />}
+                Covid gegevens van {uiStore.username}
               </p>
 
               <CovidInformation

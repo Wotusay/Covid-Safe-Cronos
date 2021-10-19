@@ -1,5 +1,4 @@
-import { FOAF } from '@inrupt/lit-generated-vocab-common';
-import { Text, useSession } from '@inrupt/solid-ui-react';
+import { useSession } from '@inrupt/solid-ui-react';
 import { useObserver } from 'mobx-react-lite';
 import pdfjs from 'pdfjs-dist';
 import React, { useState } from 'react';
@@ -101,8 +100,7 @@ const FormCovid = (): React.ReactElement => {
       <div className="grid justify-center w-3/12 p-3 pb-4 mt-24 shadow-xl rounded-xl bg-blueAccent">
         <div className="grid pb-1 rounded-md shadow-xl p-9 bg-whiteAccent">
           <p className="text-xl font-medium mb-7 text-navyBlue">
-            Vul je covid gegevens aan van{' '}
-            <Text property={FOAF.name.iri.value} />
+            Vul je covid gegevens aan van {uiStore.username}
           </p>
           <p className="flex content-center justify-center gap-1 font-medium text-green-700 mb-7">
             {solidStore.status}
